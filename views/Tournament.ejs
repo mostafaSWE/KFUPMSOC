@@ -25,11 +25,11 @@
         <header class="header">
           <div class="header-left">
             <img src="Assets/football.png" alt="Website Icon">
-            <h1 class="header-title"><a href="home.html" style="color: green;">KFUPMSOC</a></h1>
+            <h1 class="header-title"><a href="/" style="color: green;">KFUPMSOC</a></h1>
           </div>
           
           <div class="header-right">
-           <a href="Sign-in.html"> <button class="header-button">Sign In</button></a>
+           <a href="/Sign-in"> <button class="header-button">Sign In</button></a>
           </div>
         </header>
     
@@ -38,7 +38,7 @@
    
   <div class="content">
     <div class="content-text">
-      <p id="first-p"><span class="content-text-break"><%= tournament.tr_name %></span></p>
+      <p id="first-p"><span class="content-text-break"><%= locals.trName %></span></p>
      
     <!-- <a href="/Booking/booking.html">  <span class="book-now">
         Book now
@@ -62,115 +62,39 @@
         <div class="container">
             <hr class="hr-content">
             <h1 class="header__title">Teams</h1>
-            <!-- <div class="header__search">
-              <div class="header__search-left">
-                <input class="header__search-input" type="text" placeholder="Search...">
-                <button class="header__search-btn">Search</button>
-              </div>
-              <div class="header__search-middle">
-                <input type="checkbox" id="favorites" name="favorites">
-                <label for="favorites">Show Favorites</label>
-              </div>
-              <div class="header__search-right">
-                <select class="header__search-select" name="filter">
-                  <option value="">All</option>
-                  <option value="italian">Italian</option>
-                  <option value="chinese">Chinese</option>
-                  <option value="mexican">Mexican</option>
-                  <option value="american">American</option>
-                </select>
-              </div>
-            </div> -->
-            <!-- Card  -->
-            <!-- <div class="card-container">
-                <div class="card">
-                  <div class="card-icon">
-                    <img src="Assets/cup.png" alt="Card Image">
-                  </div>
-                  <h2 class="card-name">Card Title</h2>
-                  <p class="card-description">Card description goes here.</p>
-                  
-                  <div class="card-buttons">
-                    <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                  </div>
-                </div>
+            <% teams.forEach(function(team) { %>
+                <a href="/Team?id=<%= team.team_id %>"><button class="card-button"><h3><%= team.team_id %></h3></button></a>
                 
-                <div class="card">
-                  <div class="card-icon">
-                    <img src="Assets/cup.png" alt="Card Image">
-                  </div>
-                  <h2 class="card-name">Card Title</h2>
-                  <p class="card-description">Card description goes here.</p>
-                  
-                  <div class="card-buttons">
-                    <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                  </div>
-                </div>
-                
-                <div class="card">
-                  <div class="card-icon">
-                    <img src="Assets/cup.png" alt="Card Image">
-                  </div>
-                  <h2 class="card-name">Card Title</h2>
-                  <p class="card-description">Card description goes here.</p>
-                  
-                  <div class="card-buttons">
-                    <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                  </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">
-                      <img src="Assets/cup.png" alt="Card Image">
-                    </div>
-                    <h2 class="card-name">Card Title</h2>
-                    <p class="card-description">Card description goes here.</p>
-                    
-                    <div class="card-buttons">
-                      <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                    </div>
-                  </div>
-
-                  <div class="card">
-                    <div class="card-icon">
-                      <img src="Assets/cup.png" alt="Card Image">
-                    </div>
-                    <h2 class="card-name">Card Title</h2>
-                    <p class="card-description">Card description goes here.</p>
-                    
-                    <div class="card-buttons">
-                      <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                      <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                    </div>
-                  </div>
-
-                  <div class="card">
-                    <div class="card-icon">
-                      <img src="Assets/cup.png" alt="Card Image">
-                    </div>
-                    <h2 class="card-name">Card Title</h2>
-                    <p class="card-description">Card description goes here.</p>
-                    
-                    <div class="card-buttons">
-                      <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                    </div>
-                  </div>
-
-              </div> -->
-              <!-- end of cards -->
-
-
-
-              <!-- <div class="show-more">
-                <button class="show-more-button">Load More</button>
-              </div> -->
+              <% }); %>
+           
+              
               <hr class="hr-content">
               <h1 class="header__title">Matches</h1>
+              <% if (matches.length > 0) { %>
+                <h2>Match Data</h2>
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Match Number</th>
+                      <th>Win/Lose</th>
+                      <th>Play Date</th>
+                      <th>Goal Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% for (let i = 0; i < matches.length; i++) { %>
+                      <tr>
+                        <td><%= matches[i].match_no %></td>
+                        <td><%= matches[i].win_lose %></td>
+                        <td><%= matches[i].play_date %></td>
+                        <td><%= matches[i].goal_score %></td>
+                      </tr>
+                    <% } %>
+                  </tbody>
+                </table>
+              <% } else { %>
+                <p>No match data available for this tournament.</p>
+              <% } %>
     </div>
     
 

@@ -18,11 +18,11 @@
         <header class="header">
           <div class="header-left">
             <img src="/Assets/football.png" alt="Website Icon">
-            <h1 class="header-title"><a href="home.html" style="color: green;">KFUPMSOC</a></h1>
+            <h1 class="header-title"><a href="/" style="color: green;">KFUPMSOC</a></h1>
           </div>
           
           <div class="header-right">
-           <a href="Sign-in.html"> <button class="header-button">Sign In</button></a>
+           <a href="/Sign-in"> <button class="header-button">Sign In</button></a>
           </div>
         </header>
     
@@ -84,7 +84,7 @@
                   
                   
                   <div class="card-buttons">
-                    <a href="/tournament?id=<%= tournament.tr_id %>"><button class="card-button">Browse Tournament</button></a>
+                    <a href="/tournament?id=<%= tournament.tr_id %>&tr_name=<%= tournament.tr_name %>"><button class="card-button">Browse Tournament</button></a>
                   </div>
                 </div>
 

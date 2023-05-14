@@ -36,35 +36,154 @@ app.get("/", (req, res) => {
 });
 
 // define the getTournamentData function
+// function getTournamentData(tournamentId, callback) {
+//   // define the SQL query to fetch the team data for the tournament
+//   const sql = `SELECT * FROM team WHERE tr_id = ${tournamentId}`;
+
+//   // execute the SQL query and handle the result
+//   connection.query(sql, (error, results, fields) => {
+//     if (error) {
+//       callback(error, null);
+//     } else if (results.length === 0) {
+//       const error = new Error(`Tournament ${tournamentId} not found`);
+//       callback(error, null);
+//     } else {
+//       const teamData = results;
+//       callback(null, teamData);
+//     }
+//   });
+// }
+
 function getTournamentData(tournamentId, callback) {
-  // define the SQL query to fetch the tournament data
-  const sql = `SELECT * FROM tournament WHERE tr_id = ${tournamentId}`;
+  // define the SQL queries to fetch the team data and match data for the tournament
+  const teamSql = `SELECT * FROM team WHERE tr_id = ${tournamentId}`;
+
+  const matchSql = `SELECT md.match_no, md.win_lose, mp.play_date, mp.goal_score
+    FROM Team tm
+    JOIN Match_details md ON tm.team_id = md.team_id
+    JOIN Match_played mp ON md.match_no = mp.match_no
+    WHERE tm.tr_id = ${tournamentId}
+    ORDER BY mp.play_date`;
+
+  // execute the SQL queries and handle the results
+  connection.query(teamSql, (error, teamResults, fields) => {
+    if (error) {
+      callback(error, null);
+    } else if (teamResults.length === 0) {
+      const error = new Error(`Tournament ${tournamentId} not found`);
+      callback(error, null);
+    } else {
+      const teamData = teamResults;
+      connection.query(matchSql, (error, matchResults, fields) => {
+        if (error) {
+          callback(error, null);
+        } else {
+          const matchData = matchResults;
+          const data = { teams: teamData, matches: matchData };
+          callback(null, data);
+        }
+      });
+    }
+  });
+}
+
+// define the getTournamentData function
+// function getTeamData(teamId, callback) {
+//   // define the SQL query to fetch the team data for the tournament
+//   const sql = `SELECT * FROM player WHERE team_Id = ${teamId}`;
+
+//   // execute the SQL query and handle the result
+//   connection.query(sql, (error, results, fields) => {
+//     if (error) {
+//       callback(error, null);
+//     } else if (results.length === 0) {
+//       const error = new Error(`Tournament ${tournamentId} not found`);
+//       callback(error, null);
+//     } else {
+//       const teamData = results;
+//       callback(null, teamData);
+//     }
+//   });
+// }
+
+// use the getTournamentData function in a route handler
+// app.get('/tournament', (req, res) => {
+//   const tournamentId = req.query.id;
+//   const trName = req.query.tr_name;
+//   getTournamentData(tournamentId, (error, teamData) => {
+//     if (error) {
+//       res.status(500).send('Error fetching tournament data');
+//     } else {
+//       //console.log(teamData);
+//       console.log(trName);
+//       res.render('tournament', { teams: teamData, trName });
+//     }
+//   });
+// });
+
+
+app.get('/tournament', (req, res) => {
+  const tournamentId = req.query.id;
+  const trName = req.query.tr_name;
+
+  // call the getTournamentData function with the tournamentId
+  getTournamentData(tournamentId, (error, data) => {
+    if (error) {
+      res.status(500).send('Error fetching tournament data');
+    } else {
+      // render the tournament.ejs template with the teamData and matchData objects
+      res.render('tournament', { teams: data.teams, matches: data.matches, trName });
+    }
+  });
+});
+
+
+app.get('/Team', (req, res) => {
+  const teamId = req.query.id;
+
+  // call the getTeamData function with the teamId
+  getTeamData(teamId, (error, teamData) => {
+    if (error) {
+      res.status(500).send('Error fetching team data');
+    } else {
+      // render the Team.ejs template with the teamData object
+      res.render('Team', { team: teamData });
+    }
+  });
+});
+
+app.get('/Sign-in', (req, res) => {
+  // Render the Sign-in page
+  res.render('Sign-in');
+});
+
+app.get('/Sign-up', (req, res) => {
+  // Render the Sign-in page
+  res.render('Sign-up');
+});
+
+app.get('/Admin', (req, res) => {
+  // Render the Sign-in page
+  res.render('Admin');
+});
+
+function getTeamData(teamId, callback) {
+  // define the SQL query to fetch the player data for the team
+  const sql = `SELECT * FROM player WHERE team_id = ${teamId}`;
 
   // execute the SQL query and handle the result
   connection.query(sql, (error, results, fields) => {
     if (error) {
       callback(error, null);
     } else if (results.length === 0) {
-      const error = new Error(`Tournament ${tournamentId} not found`);
+      const error = new Error(`Team ${teamId} not found`);
       callback(error, null);
     } else {
-      const tournamentData = results[0];
-      callback(null, tournamentData);
+      const teamData = { teamId: teamId, players: results };
+      callback(null, teamData);
     }
   });
 }
-
-// use the getTournamentData function in a route handler
-app.get('/tournament', (req, res) => {
-  const tournamentId = req.query.id;
-  getTournamentData(tournamentId, (error, tournamentData) => {
-    if (error) {
-      res.status(500).send('Error fetching tournament data');
-    } else {
-      res.render('tournament', { tournament: tournamentData });
-    }
-  });
-});
 
 // Start the server
 app.listen(3000, () => {

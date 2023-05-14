@@ -25,11 +25,11 @@
         <header class="header">
           <div class="header-left">
             <img src="Assets/football.png" alt="Website Icon">
-            <h1 class="header-title"><a href="home.html" style="color: green;">KFUPMSOC</a></h1>
+            <h1 class="header-title"><a href="/" style="color: green;">KFUPMSOC</a></h1>
           </div>
           
           <div class="header-right">
-           <a href="Sign-in.html"> <button class="header-button">Sign In</button></a>
+           <a href="/Sign-in"> <button class="header-button">Sign In</button></a>
           </div>
         </header>
     
@@ -61,6 +61,28 @@
         <!-- Searching tool  and the main body-->
         <div class="container">
             <hr class="hr-content">
+            <h1 class="header__title">Team Player</h1>
+            
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Player Name</th>
+                        <th>Player Number</th>
+                        <th>Player Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% for (let i = 0; i < team.players.length; i++) { %>
+                        <tr>
+                          <td><%= team.players[i].player_name %></td>
+                          <td><%= team.players[i].jersey_no %></td>
+                          <td><%= team.players[i].position_to_play %></td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+
+
             
             <!-- <div class="header__search">
               <div class="header__search-left">
