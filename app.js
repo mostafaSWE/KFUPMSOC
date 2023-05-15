@@ -25,21 +25,13 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Route to display data from MySQL in the frontend
-app.get('/', (req, res) => {
-  const tournamentSql = 'SELECT * FROM tournament';
-  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
-    if (tournamentError) {
-      throw tournamentError;
+app.get("/", (req, res) => {
+  const sql = "SELECT * FROM tournament";
+  connection.query(sql, (err, results) => {
+    if (err) {
+      throw err;
     }
-    getPlayerWithMostGoals((playerError, playerResult) => {
-      if (playerError) {
-        throw playerError;
-      }
-      res.render('home', {
-        tournaments: tournamentResults,
-        mostGoalsPlayer: playerResult[0]
-      });
-    });
+    res.render("home", { tournaments: results });
   });
 });
 
@@ -251,7 +243,23 @@ app.get('/Admin', (req, res) => {
   res.render('Admin');
 });
 
+function getTeamData(teamId, callback) {
+  // define the SQL query to fetch the player data for the team
+  const sql = `SELECT * FROM player WHERE team_id = ${teamId}`;
 
+  // execute the SQL query and handle the result
+  connection.query(sql, (error, results, fields) => {
+    if (error) {
+      callback(error, null);
+    } else if (results.length === 0) {
+      const error = new Error(`Team ${teamId} not found`);
+      callback(error, null);
+    } else {
+      const teamData = { teamId: teamId, players: results };
+      callback(null, teamData);
+    }
+  });
+}
 
 // Start the server
 app.listen(3000, () => {
