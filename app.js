@@ -131,12 +131,14 @@ function getTournamentData(tournamentId, callback) {
   // define the SQL queries to fetch the team data and match data for the tournament
   const teamSql = `SELECT * FROM team WHERE tr_id = ${tournamentId}`;
 
-  const matchSql = `SELECT match_played.match_no, match_played.play_date, match_played.results, team.team_id, team.tr_id, tournament.tr_name
-  FROM match_played
-  JOIN team ON match_played.match_no = team.match_played
-  JOIN tournament ON team.tr_id = tournament.tr_id
-  WHERE tournament.tr_id = ${tournamentId}
-  ORDER BY match_played.play_date ASC;`;
+  const matchSql = `SELECT mp.play_date, md.match_no, t1.team_id AS team1_id, t2.team_id AS team2_id,
+  md.play_stage, md.win_lose, md.decided_by, md.goal_score, md.penalty_score
+FROM match_played mp
+JOIN match_details md ON mp.match_no = md.match_no
+JOIN team t1 ON md.team_id = t1.team_id
+JOIN team t2 ON t1.tr_id = t2.tr_id AND md.team_id <> t2.team_id
+WHERE t1.tr_id = 1 -- replace with the ID of the desired tournament
+ORDER BY mp.play_date;`;
 
   // execute the SQL queries and handle the results
   connection.query(teamSql, (error, teamResults, fields) => {
@@ -159,14 +161,37 @@ function getTournamentData(tournamentId, callback) {
   });
 }
 
+app.post('/join-team', (req, res) => {
+  const { player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir } = req.body;
 
+  // validate form fields
+  if (!player_id || !team_id || !jersey_no || !player_name || !position_to_play || !dt_of_bir) {
+    res.status(400).send('All fields are required.');
+    return;
+  }
+
+  // insert player into database
+  const query = 'INSERT INTO players(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(query, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (error, results) => {
+    if (error) {
+      console.error(error);
+      res.status(500).send('Error joining team. Please try again later.');
+      return;
+    }
+    res.redirect(`/tournament?id=${team_id}`);
+  });
+});
 app.get('/Team', (req, res) => {
   const teamId = req.query.id;
 
   // call the getTeamData function with the teamId
   getTeamData(teamId, (error, teamData) => {
     if (error) {
-      res.status(500).send('Error fetching team data');
+      const errorMessage = 'No data available for'+ teamId;
+      res.render('Team', {
+        errorMessage: errorMessage,
+        teamId: teamId
+      });
     } else {
       // render the Team.ejs template with the teamData object, including coach, manager, captain, and red card data
       res.render('Team', {

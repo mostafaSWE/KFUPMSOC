@@ -14,6 +14,17 @@
             margin-left: 10px;
   
         }
+        table {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
     </style>
 </head>
 <body style=" background-color: #E4DEDE;">
@@ -61,6 +72,12 @@
         <!-- Searching tool  and the main body-->
         <div class="container">
             <hr class="hr-content">
+            <% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            
+            <% } else { %>
             <h2>Red Cards</h2>
             <table>
               <tr>
@@ -122,118 +139,43 @@
                   <% } else { %>
                     <p>No manager data available for this team.</p>
                   <% } %>
+                  
+                  <% } %>    
+                  <hr class="hr-content">
+                  <h1 class="header__title">Join Team</h1>
+                  <form action="/join-team" method="post">
+                    <div class="form-group">
+                      <label for="player_id">Player ID:</label>
+                      <input type="number" class="form-control" id="player_id" name="player_id" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="team_id">Team ID:</label>
+                      <input type="number" class="form-control" id="team_id" name="team_id" value="<%= teamId %>" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label for="jersey_no">Jersey Number:</label>
+                      <input type="number" class="form-control" id="jersey_no" name="jersey_no" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="player_name">Player Name:</label>
+                      <input type="text" class="form-control" id="player_name" name="player_name" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="position_to_play">Position to Play:</label>
+                      <input type="text" class="form-control" id="position_to_play" name="position_to_play" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="dt_of_bir">Date of Birth:</label>
+                      <input type="date" class="form-control" id="dt_of_bir" name="dt_of_bir" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Join Team</button>
+                  </form>
 
 
 
             
-            <!-- <div class="header__search">
-              <div class="header__search-left">
-                <input class="header__search-input" type="text" placeholder="Search...">
-                <button class="header__search-btn">Search</button>
-              </div>
-              <div class="header__search-middle">
-                <input type="checkbox" id="favorites" name="favorites">
-                <label for="favorites">Show Favorites</label>
-              </div>
-              <div class="header__search-right">
-                <select class="header__search-select" name="filter">
-                  <option value="">All</option>
-                  <option value="italian">Italian</option>
-                  <option value="chinese">Chinese</option>
-                  <option value="mexican">Mexican</option>
-                  <option value="american">American</option>
-                </select>
-              </div>
-            </div> -->
-            <!-- Card  -->
-            <!-- <div class="card-container">
-                <div class="card">
-                  <div class="card-icon">
-                    <img src="Assets/cup.png" alt="Card Image">
-                  </div>
-                  <h2 class="card-name">Card Title</h2>
-                  <p class="card-description">Card description goes here.</p>
+            
                   
-                  <div class="card-buttons">
-                    <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                  </div>
-                </div>
-                
-                <div class="card">
-                  <div class="card-icon">
-                    <img src="Assets/cup.png" alt="Card Image">
-                  </div>
-                  <h2 class="card-name">Card Title</h2>
-                  <p class="card-description">Card description goes here.</p>
-                  
-                  <div class="card-buttons">
-                    <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                  </div>
-                </div>
-                
-                <div class="card">
-                  <div class="card-icon">
-                    <img src="Assets/cup.png" alt="Card Image">
-                  </div>
-                  <h2 class="card-name">Card Title</h2>
-                  <p class="card-description">Card description goes here.</p>
-                  
-                  <div class="card-buttons">
-                    <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                  </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-icon">
-                      <img src="Assets/cup.png" alt="Card Image">
-                    </div>
-                    <h2 class="card-name">Card Title</h2>
-                    <p class="card-description">Card description goes here.</p>
-                    
-                    <div class="card-buttons">
-                      <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                    </div>
-                  </div>
-
-                  <div class="card">
-                    <div class="card-icon">
-                      <img src="Assets/cup.png" alt="Card Image">
-                    </div>
-                    <h2 class="card-name">Card Title</h2>
-                    <p class="card-description">Card description goes here.</p>
-                    
-                    <div class="card-buttons">
-                      <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                      <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                    </div>
-                  </div>
-
-                  <div class="card">
-                    <div class="card-icon">
-                      <img src="Assets/cup.png" alt="Card Image">
-                    </div>
-                    <h2 class="card-name">Card Title</h2>
-                    <p class="card-description">Card description goes here.</p>
-                    
-                    <div class="card-buttons">
-                      <a href="/Menu/Menu.html"><button class="card-button">Browse Tournament</button></a>
-                    <a href="/Booking/booking.html"> <button class="card-button">Browse Teams</button></a>
-                    </div>
-                  </div>
-
-              </div> -->
-              <!-- end of cards -->
-
-
-
-              <!-- <div class="show-more">
-                <button class="show-more-button">Load More</button>
-              </div> -->
-              
     </div>
     
 

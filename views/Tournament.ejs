@@ -72,28 +72,39 @@
            
               
               <hr class="hr-content">
-              <h1 class="header__title">Matches</h1>
-              <h1>Match Results</h1>
-<table>
-  <tr>
-    <th>Match Number</th>
-    <th>Play Date</th>
-    <th>Results</th>
-    <th>Team ID</th>
-    <th>Tournament ID</th>
-    <th>Tournament Name</th>
-  </tr>
-  <% if (matches && matches.length > 0) { %>
-    <% matches.forEach(function(match) { %>
-      <tr>
-        <td><%= match.match_no %></td>
-        <td><%= match.play_date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
-        <td><%= match.results %></td>
-        <td><%= match.team_id %></td>
-        <td><%= match.tr_id %></td>
-        <td><%= match.tr_name %></td>
-      </tr>
-    <% }); %>
+             
+              <% if (matches && matches.length > 0) { %><h2>Matches for <%= locals.trName %></h2>
+
+                <table>
+                  <thead>
+                    <tr>
+                      <th>Date</th>
+                      <th>Match No.</th>
+                      <th>Team 1</th>
+                      <th>Team 2</th>
+                      <th>Stage</th>
+                      <th>Result</th>
+                      <th>Decided By</th>
+                      <th>Score</th>
+                      <th>Penalty Score</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <% matches.forEach(function(match) { %>
+                      <tr>
+                        <td><%= match.play_date.toDateString() %></td>
+                        <td><%= match.match_no %></td>
+                        <td><%= match.team1_id %></td>
+                        <td><%= match.team2_id %></td>
+                        <td><%= match.play_stage %></td>
+                        <td><%= match.win_lose %></td>
+                        <td><%= match.decided_by %></td>
+                        <td><%= match.goal_score %></td>
+                        <td><%= match.penalty_score %></td>
+                      </tr>
+                    <% }); %>
+                  </tbody>
+                </table>
   <% } else { %>
     <tr>
       <td colspan="6">No match results available for this tournament.</td>
