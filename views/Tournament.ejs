@@ -35,7 +35,7 @@
     
 
         <!-- image with text and book now button -->
-   
+        
   <div class="content">
     <div class="content-text">
       <p id="first-p"><span class="content-text-break"><%= locals.trName %></span></p>
@@ -61,6 +61,9 @@
         <!-- Searching tool  and the main body-->
         <div class="container">
             <hr class="hr-content">
+            <% if (typeof error !== 'undefined' && error !== null) { %>
+              <p><%= error %></p>
+            <% } else { %>
             <h1 class="header__title">Teams</h1>
             <% teams.forEach(function(team) { %>
                 <a href="/Team?id=<%= team.team_id %>"><button class="card-button"><h3><%= team.team_id %></h3></button></a>
@@ -70,32 +73,36 @@
               
               <hr class="hr-content">
               <h1 class="header__title">Matches</h1>
-              <% if (matches.length > 0) { %>
-                <h2>Match Data</h2>
-                <table>
-                  <thead>
-                    <tr>
-                      <th>Match Number</th>
-                      <th>Win/Lose</th>
-                      <th>Play Date</th>
-                      <th>Goal Score</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <% for (let i = 0; i < matches.length; i++) { %>
-                      <tr>
-                        <td><%= matches[i].match_no %></td>
-                        <td><%= matches[i].win_lose %></td>
-                        <td><%= matches[i].play_date %></td>
-                        <td><%= matches[i].goal_score %></td>
-                      </tr>
-                    <% } %>
-                  </tbody>
-                </table>
-              <% } else { %>
-                <p>No match data available for this tournament.</p>
-              <% } %>
+              <h1>Match Results</h1>
+<table>
+  <tr>
+    <th>Match Number</th>
+    <th>Play Date</th>
+    <th>Results</th>
+    <th>Team ID</th>
+    <th>Tournament ID</th>
+    <th>Tournament Name</th>
+  </tr>
+  <% if (matches && matches.length > 0) { %>
+    <% matches.forEach(function(match) { %>
+      <tr>
+        <td><%= match.match_no %></td>
+        <td><%= match.play_date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) %></td>
+        <td><%= match.results %></td>
+        <td><%= match.team_id %></td>
+        <td><%= match.tr_id %></td>
+        <td><%= match.tr_name %></td>
+      </tr>
+    <% }); %>
+  <% } else { %>
+    <tr>
+      <td colspan="6">No match results available for this tournament.</td>
+    </tr>
+  <% } %>
+</table>
+<% } %>
     </div>
+    
     
 
     <!-- end of main body -->

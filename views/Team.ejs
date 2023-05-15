@@ -38,7 +38,7 @@
    
   <div class="content">
     <div class="content-text">
-      <p id="first-p"><span class="content-text-break">X</span> Team</p>
+      <p id="first-p"><span class="content-text-break"><%= teamId %></span> Team</p>
      
     <!-- <a href="/Booking/booking.html">  <span class="book-now">
         Book now
@@ -61,11 +61,31 @@
         <!-- Searching tool  and the main body-->
         <div class="container">
             <hr class="hr-content">
-            <h1 class="header__title">Team Player</h1>
+            <h2>Red Cards</h2>
+            <table>
+              <tr>
+                <th>Player Name</th>
+                <th>Red Cards</th>
+              </tr>
+              <% if (redCards && redCards.length > 0) { %>
+                <% redCards.forEach(function(redCard) { %>
+                  <tr>
+                    <td><%= redCard.player_name %></td>
+                    <td><%= redCard.red_cards %></td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="2">No red cards for this team.</td>
+                </tr>
+              <% } %>
+            </table>
+            <h1 class="header__title">Team Players</h1>
             
                 <table>
                     <thead>
                       <tr>
+                        <th>Player ID</th>
                         <th>Player Name</th>
                         <th>Player Number</th>
                         <th>Player Position</th>
@@ -74,6 +94,7 @@
                     <tbody>
                       <% for (let i = 0; i < team.players.length; i++) { %>
                         <tr>
+                          <td><%= team.players[i].player_id %></td>
                           <td><%= team.players[i].player_name %></td>
                           <td><%= team.players[i].jersey_no %></td>
                           <td><%= team.players[i].position_to_play %></td>
@@ -81,6 +102,27 @@
                       <% } %>
                     </tbody>
                   </table>
+                  <h1 class="header__title">Team Coach</h1>
+                  <% if (coach) { %>
+                    <p>Id: <%= coach.coach_id %></p>
+                  <% } else { %>
+                    <p>No coach data available for this team.</p>
+                  <% } %>
+
+                  <h1 class="header__title">Team Captain</h1>
+                  <% if (captain) { %>
+                    <p><%= captain.player_captain %></p>
+                  <% } else { %>
+                    <p>No captain data available for this team.</p>
+                  <% } %>
+
+                  <h1 class="header__title">Team Manager</h1>
+                  <% if (manager) { %>
+                    <p><%= manager.manager_id %></p>
+                  <% } else { %>
+                    <p>No manager data available for this team.</p>
+                  <% } %>
+
 
 
             
