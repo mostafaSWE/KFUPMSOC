@@ -1,6 +1,15 @@
+/* CSS code for add-team-to-tournament page */
+
+/* Global styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
 body {
-  background-color: #f2f2f2;
   font-family: Arial, sans-serif;
+  background-color: #f0f0f0;
 }
 
 .container {
@@ -9,75 +18,86 @@ body {
   padding: 20px;
 }
 
-h1 {
-  text-align: center;
-  margin-bottom: 30px;
+/* Header styles */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
 }
 
+.header h1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #333;
+}
+
+.back-btn {
+  display: inline-flex;
+  align-items: center;
+  font-size: 16px;
+  color: #333;
+  text-decoration: none;
+  padding: 10px;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+.back-btn:hover {
+  background-color: #e0e0e0;
+}
+
+.back-btn i {
+  margin-right: 10px;
+}
+
+/* Form styles */
 .form-container {
   background-color: #fff;
-  padding: 20px;
   border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.3);
 }
 
 .form-group {
   margin-bottom: 20px;
 }
 
-label {
+.form-group label {
   display: block;
+  margin-bottom: 5px;
   font-size: 18px;
   font-weight: bold;
-  margin-bottom: 5px;
+  color: #333;
 }
 
-input {
-  display: block;
+.form-group input[type="text"] {
   width: 100%;
   padding: 10px;
   font-size: 16px;
   border-radius: 5px;
-  border: 1px solid #ccc;
+  border: none;
+  background-color: #f0f0f0;
+  transition: box-shadow 0.3s ease;
 }
 
-button {
-  background-color: #4CAF50;
-  color: #fff;
-  padding: 10px 20px;
-  font-size: 16px;
+.form-group input[type="text"]:focus {
+  box-shadow: 0 0 5px rgba(0,0,0,0.3);
+}
+
+#add-team-btn {
+  display: block;
+  width: 100%;
+  padding: 10px;
+  font-size: 18px;
   font-weight: bold;
+  color: #fff;
+  background-color: #333;
   border: none;
   border-radius: 5px;
-  cursor: pointer;
-  transition: background-color 0.3s ease-in-out;
+  transition: background-color 0.3s ease;
 }
 
-button:hover {
-  background-color: #3e8e41;
-}
-
-.tournament-list {
-  margin-top: 30px;
-  background-color: #fff;
-  padding: 20px;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-h2 {
-  font-size: 24px;
-  font-weight: bold;
-  margin-bottom: 20px;
-}
-
-ul {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
-
-li {
-  font-size: 18px;
-  margin-bottom: 5px;
+#add-team-btn:hover {
+  background-color: #444;
 }

@@ -25,13 +25,23 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
 
 // Route to display data from MySQL in the frontend
+// app.get("/", (req, res) => {
+//   const sql = "SELECT * FROM tournament";
+//   connection.query(sql, (err, results) => {
+//     if (err) {
+//       throw err;
+//     }
+//     res.render("home", { tournaments: results });
+//   });
+// });
+
 app.get("/", (req, res) => {
   const sql = "SELECT * FROM tournament";
   connection.query(sql, (err, results) => {
     if (err) {
       throw err;
     }
-    res.render("home", { tournaments: results });
+    res.render("Home", { tournaments: results });
   });
 });
 
@@ -241,6 +251,14 @@ app.get('/Sign-up', (req, res) => {
 app.get('/Admin', (req, res) => {
   // Render the Sign-in page
   res.render('Admin');
+});
+
+
+
+
+app.get('/add-team-to-tournament', (req, res) => {
+  // Render the add-team-to-tournament page
+  res.render('add-team-to-tournament');
 });
 
 function getTeamData(teamId, callback) {
