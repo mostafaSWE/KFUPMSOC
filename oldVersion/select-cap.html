@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Select a Captain</title>     
+    <link rel="stylesheet" type="text/css" href="select-cap.css">
+  </head>
+  <body>
+    <div class="container">
+      <h1>Select a Captain for a Team</h1>
+      <div class="form-container">
+        <form>
+          <div class="form-group">
+            <label for="tournament-name">Tournament Name:</label>
+            <input type="text" id="tournament-name" placeholder="Enter tournament name" required>
+          </div>
+          <div class="form-group">
+            <label for="team-name">Team Name:</label>
+            <select id="team-name"></select>
+          </div>
+          <div class="form-group">
+            <label for="player-name">Captain:</label>
+            <select id="player-name"></select>
+          </div>
+          <button type="submit" id="select-captain-btn">Select Captain</button>
+        </form>
+      </div>
+    </div>
+    <script src="select-cap.js"></script>
+  </body>
+</html>
