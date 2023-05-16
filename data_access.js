@@ -116,10 +116,10 @@ function getSignIN(Email,Password,callback){
       if (error) {
         let message = "The sign in information is wrong";
         console.log(error);
-        callback(message);
+        callback(message, null);
       }
       else {
-        callback(signIn);
+        callback(null, signIn);
       }
   });
 }

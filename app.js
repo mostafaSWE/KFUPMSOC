@@ -292,7 +292,21 @@ app.get('/Sign-in', async(req, res) => {
         }
         else{
           console.log(signData);
-          res.redirect('./views/admin');
+          const tournamentSql = 'SELECT * FROM tournament';
+          connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+            if (tournamentError) {
+              throw tournamentError;
+            }
+            getPlayerWithMostGoals((playerError, playerResult) => {
+              if (playerError) {
+                throw playerError;
+              }
+              res.render('admin', {
+                tournaments: tournamentResults,
+                mostGoalsPlayer: playerResult[0]
+              });
+            });
+          });
         } 
       }
     });
@@ -310,23 +324,44 @@ app.get('/Sign-up', (req, res) => {
   res.render('Sign-up');
 });
 
-app.get('/Admin', (req, res) => {
-  const tournamentSql = 'SELECT * FROM tournament';
-  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
-    if (tournamentError) {
-      throw tournamentError;
+app.get('/viewRequests', (req, res) => {
+  const joinRequestsSql = 'SELECT * FROM join_requests';
+
+  connection.query(joinRequestsSql, (joinRequestsError, joinRequestsResults) => {
+    if (joinRequestsError) {
+      console.error('Error retrieving join requests:', joinRequestsError);
+      res.status(500).send('An error occurred while retrieving join requests');
+      return;
     }
-    getPlayerWithMostGoals((playerError, playerResult) => {
-      if (playerError) {
-        throw playerError;
-      }
-      res.render('admin', {
-        tournaments: tournamentResults,
-        mostGoalsPlayer: playerResult[0]
-      });
+
+    console.log(joinRequestsResults);
+
+    res.render('viewRequests', {
+      joinRequests: joinRequestsResults
     });
   });
 });
+// handle GET request to /admin route
+app.get('/Admin', (req, res) => {
+  const tournamentSql = 'SELECT * FROM tournament';
+  
+  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+  if (tournamentError) {
+  throw tournamentError;
+  }
+  getPlayerWithMostGoals((playerError, playerResult) => {
+  if (playerError) {
+  throw playerError;
+  }
+  res.render('admin', {
+  tournaments: tournamentResults,
+  mostGoalsPlayer: playerResult[0]
+  });
+  });
+  });
+  });
+
+// handle POST request to /approve-request route
 app.post('/approve-request', (req, res) => {
   const { player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir } = req.body;
 
@@ -336,7 +371,7 @@ app.post('/approve-request', (req, res) => {
     if (error) {
       console.error(error);
       req.flash('error', 'Error approving request. Please try again later.');
-      res.redirect('/Admin');
+      res.redirect('/admin');
       return;
     }
 
@@ -346,16 +381,17 @@ app.post('/approve-request', (req, res) => {
       if (error) {
         console.error(error);
         req.flash('error', 'Error approving request. Please try again later.');
-        res.redirect('/Admin');
+        res.redirect('/admin');
         return;
       }
-      req.flash('success', 'Request approved successfully.');
-      res.redirect('/Admin');
+
+      req.flash('success', 'Request approved successfully.'); // set the success message
+      res.redirect('/admin');
     });
   });
 });
 
-// handle /reject-request route
+// handle POST request to /reject-request route
 app.post('/reject-request', (req, res) => {
   const { player_id, team_id } = req.body;
 
@@ -365,19 +401,13 @@ app.post('/reject-request', (req, res) => {
     if (error) {
       console.error(error);
       req.flash('error', 'Error rejecting request. Please try again later.');
-      res.redirect('/Admin');
+      res.redirect('/admin');
       return;
     }
-    req.flash('success', 'Request rejected successfully.');
-    res.redirect('/Admin');
-  });
-});
 
-// pass flash messages to views
-app.use((req, res, next) => {
-  res.locals.errorMessages = req.flash('error');
-  res.locals.successMessages = req.flash('success');
-  next();
+    req.flash('success', 'Request rejected successfully.'); // set the success message
+    res.redirect('/admin');
+  });
 });
 
 

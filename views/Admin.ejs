@@ -38,69 +38,14 @@
         <!-- image with text and book now button -->
   <div class="content">
     <div class="content-text">
-      <p id="first-p">Welcome<span class="content-text-break">to KFUPMSOC</span></p>
-    </div>
-    <% if (errorMessages.length > 0) { %>
-      <div class="alert alert-danger">
-        <% for (let i = 0; i < errorMessages.length; i++) { %>
-          <p><%= errorMessages[i] %></p>
-        <% } %>
-      </div>
-    <% } %>
-    
-    <% if (successMessages.length > 0) { %>
-      <div class="alert alert-success">
-        <% for (let i = 0; i < successMessages.length; i++) { %>
-          <p><%= successMessages[i] %></p>
-        <% } %>
-      </div>
-    <% } %>
-
-    <table>
-      <thead>
-        <tr>
-          <th>Player ID</th>
-          <th>Team ID</th>
-          <th>Jersey Number</th>
-          <th>Player Name</th>
-          <th>Position to Play</th>
-          <th>Date of Birth</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>
-        <% for (let i = 0; i < joinRequests.length; i++) { %>
-          <tr>
-            <td><%= joinRequests[i].player_id %></td>
-            <td><%= joinRequests[i].team_id %></td>
-            <td><%= joinRequests[i].jersey_no %></td>
-            <td><%= joinRequests[i].player_name %></td>
-            <td><%= joinRequests[i].position_to_play %></td>
-            <td><%= joinRequests[i].dt_of_bir %></td>
-            <td>
-              <form action="/approve-request" method="post" style="display: inline;">
-                <input type="hidden" name="player_id" value="<%= joinRequests[i].player_id %>">
-                <input type="hidden" name="team_id" value="<%= joinRequests[i].team_id %>">
-                <input type="hidden" name="jersey_no" value="<%= joinRequests[i].jersey_no %>">
-                <input type="hidden" name="player_name" value="<%= joinRequests[i].player_name %>">
-                <input type="hidden" name="position_to_play" value="<%= joinRequests[i].position_to_play %>">
-                <input type="hidden" name="dt_of_bir" value="<%= joinRequests[i].dt_of_bir %>">
-                <button type="submit" class="btn btn-success">Approve</button>
-              </form>
-              <form action="/reject-request" method="post" style="display: inline;">
-                <input type="hidden" name="player_id" value="<%= joinRequests[i].player_id %>">
-                <input type="hidden" name="team_id" value="<%= joinRequests[i].team_id %>">
-                <button type="submit" class="btn btn-danger">Reject</button>
-              </form>
-            </td>
-          </tr>
-        <% } %>
-      </tbody>
-    </table>
+      <a href="/viewRequests" class="btn btn-primary">View Requests</a>
 
   </div>
         <!-- Searching tool  and the main body-->
         <div class="container">
+          <h1 class="header__title">Check Join requests:</h1>
+          <a href="/viewRequests" class="btn btn-primary">View Requests</a>
+          <hr class="hr-content">
             <h1 class="header__title">KFUPMSOC highlights</h1>
             <h2 class="alligned">Player with most goals</h2>
             <p class="alligned">Name: <%= mostGoalsPlayer.player_name %></p>
