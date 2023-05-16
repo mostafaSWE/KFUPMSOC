@@ -463,6 +463,9 @@ td,th{
   border: 1px solid black;
   padding: 1rem;
 }
+.alligned{
+  text-align: center;
+}
 
 /*--------------- footer ----*/ 
 .footer {
