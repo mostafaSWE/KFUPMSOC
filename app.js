@@ -50,7 +50,7 @@ app.get('/', (req, res) => {
       if (playerError) {
         throw playerError;
       }
-      res.render('Admin', {
+      res.render('home', {
         tournaments: tournamentResults,
         mostGoalsPlayer: playerResult[0]
       });
@@ -466,20 +466,20 @@ app.get('/viewRequests', (req, res) => {
 app.get('/Admin', (req, res) => {
   const tournamentSql = 'SELECT * FROM tournament';
   
-  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
-  if (tournamentError) {
-  throw tournamentError;
-  }
-  getPlayerWithMostGoals((playerError, playerResult) => {
-  if (playerError) {
-  throw playerError;
-  }
-  res.render('admin', {
-  tournaments: tournamentResults,
-  mostGoalsPlayer: playerResult[0]
-  });
-  });
-  });
+      connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+      if (tournamentError) {
+      throw tournamentError;
+      }
+      getPlayerWithMostGoals((playerError, playerResult) => {
+      if (playerError) {
+      throw playerError;
+      }
+    res.render('admin', {
+    tournaments: tournamentResults,
+    mostGoalsPlayer: playerResult[0]
+        });
+      });
+    });
   });
 
 // handle POST request to /approve-request route
@@ -531,12 +531,163 @@ app.post('/reject-request', (req, res) => {
 
 app.get('/add-tournament', (req, res) => {
   // Render the add-tournament page
-  res.render('add-tournament');
+  if(Object.keys(req.query).length !==0){
+    console.log("insdie")
+    const request = req.query;
+    dataAccess.addTournamentWithID(request.tournamentId,request.tournamentName,request.startDate,request.endDate,(error,tournament)=>{
+      if (error) {
+        console.log(error);
+        const tournamentSql = 'SELECT * FROM tournament';
+  
+        connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+        if (tournamentError) {
+        throw tournamentError;
+        }
+        getPlayerWithMostGoals((playerError, playerResult) => {
+        if (playerError) {
+        throw playerError;
+        }
+        res.render('admin', {
+        tournaments: tournamentResults,
+        mostGoalsPlayer: playerResult[0]
+          });
+        });
+      
+      });
+    }
+          else{
+            if(tournament.length==0){
+              console.log("Error from returned data");
+              const tournamentSql = 'SELECT * FROM tournament';
+      
+              connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+              if (tournamentError) {
+              throw tournamentError;
+              }
+              getPlayerWithMostGoals((playerError, playerResult) => {
+              if (playerError) {
+              throw playerError;
+              }
+              res.render('admin', {
+              tournaments: tournamentResults,
+              mostGoalsPlayer: playerResult[0]
+                });
+              });
+            });
+            }
+            else{
+              console.log("Success entering team");
+              const tournamentSql = 'SELECT * FROM tournament';
+      
+              connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+              if (tournamentError) {
+              throw tournamentError;
+              }
+              getPlayerWithMostGoals((playerError, playerResult) => {
+              if (playerError) {
+              throw playerError;
+              }
+              res.render('admin', {
+              tournaments: tournamentResults,
+              mostGoalsPlayer: playerResult[0]
+              });
+            });
+          });
+        };  
+      };
+    }) 
+  }
+
+  else{
+    res.render('add-tournament');
+  }
 });
 
 app.get('/add-team-to-tournament', (req, res) => {
+  if(Object.keys(req.query).length !==0){
+    console.log("insdie")
   // Render the add-team-to-tournament page
-  res.render('add-team-to-tournament');
+  const request = req.query;
+  const teamID = request.team_id;
+  const trID = request.tr_id;
+  const teamGroup = request.team_group;
+  const matchPlayed = request.match_played;
+  const won = request.won;
+  const draw = request.draw;
+  const lost = request.lost;
+  const goal_for = request.goal_for;
+  const goal_against = request.goal_against;
+  const goal_diff = request.goal_diff;
+  const points = request.points;
+  const group_position = request.group_position;
+
+  
+  dataAccess.addTeam(teamID,trID,teamGroup,matchPlayed,won,draw,lost,goal_for,goal_against,goal_diff,points,group_position,(error, teamData) => {
+    if (error) {
+      console.log(error);
+      const tournamentSql = 'SELECT * FROM tournament';
+
+      connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+      if (tournamentError) {
+      throw tournamentError;
+      }
+      getPlayerWithMostGoals((playerError, playerResult) => {
+      if (playerError) {
+      throw playerError;
+      }
+      res.render('admin', {
+      tournaments: tournamentResults,
+      mostGoalsPlayer: playerResult[0]
+        });
+      });
+    
+    });
+  }
+        else{
+          if(teamData.length==0){
+            console.log("Error from returned data");
+            const tournamentSql = 'SELECT * FROM tournament';
+    
+            connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+            if (tournamentError) {
+            throw tournamentError;
+            }
+            getPlayerWithMostGoals((playerError, playerResult) => {
+            if (playerError) {
+            throw playerError;
+            }
+            res.render('admin', {
+            tournaments: tournamentResults,
+            mostGoalsPlayer: playerResult[0]
+              });
+            });
+          });
+          }
+          else{
+            console.log("Success entering team");
+            const tournamentSql = 'SELECT * FROM tournament';
+    
+            connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+            if (tournamentError) {
+            throw tournamentError;
+            }
+            getPlayerWithMostGoals((playerError, playerResult) => {
+            if (playerError) {
+            throw playerError;
+            }
+            res.render('admin', {
+            tournaments: tournamentResults,
+            mostGoalsPlayer: playerResult[0]
+            });
+          });
+        });
+      };  
+    };
+  });
+  }
+  else{
+    res.render('add-team-to-tournament');
+  }
 });
 
 app.get('/delete-tournament', (req, res) => {

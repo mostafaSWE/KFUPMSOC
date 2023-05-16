@@ -103,6 +103,17 @@ function addTournament(tournamentName,startDate,endDate){
       }
   });
 }
+function addTournamentWithID(tr_id,tournamentName,startDate,endDate,callback){
+  const tournamentSql = `INSERT INTO tournament (tr_id,tr_name,start_date,end_date) VALUES (${tr_id},'${tournamentName}','${startDate}','${endDate}')`;
+  connection.query(tournamentSql, (error, tournaments) => {
+      if (error) {
+        callback(error,null);
+      }
+      else {
+        callback(null,tournaments);
+      }
+  });
+}
 // This function uses the tournament name to 
 function deleteTournament(tournamentID){
   const tournamentSql = `DELETE FROM tournament WHERE tr_id =${tournamentID}`;
@@ -157,6 +168,18 @@ function deleteTournamentName(tournamentName){
       }
   });
 }
+function addTeam(team_id, tr_id, team_group, match_played, won, draw, lost, goal_for, goal_against, goal_diff, points, group_position,callback){
+  const teamSql = `INSERT INTO team (team_id,tr_id,team_group,match_played,won,draw,lost,goal_for,goal_against,goal_diff,points,group_position) VALUES (${team_id},${tr_id},'${team_group}',${match_played},${won},${draw},${lost},${goal_for},${goal_against},${goal_diff},${points},${group_position})`;
+  connection.query(teamSql, (error, team) => {
+      if (error) {
+        callback(error,null);
+      }
+      else {
+        var teamData = team;
+        callback(null,teamData);
+      }
+  });
+}
 // newSignUP("Mostafa","m@gmail.com","123456","0500000000");
-module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,deleteTournamentName,getSignIN,newSignUP};
+module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,deleteTournamentName,getSignIN,newSignUP,addTeam,addTournamentWithID};
 // Just to end the connection
