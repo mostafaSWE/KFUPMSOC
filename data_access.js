@@ -104,6 +104,17 @@ function deleteTournament(tournamentID){
       }
   });
 }
+function deleteTournamentName(tournamentName){
+  const tournamentSql = `DELETE FROM tournament WHERE tr_name =${tournamentName}`;
+  connection.query(tournamentSql, (error, tournaments) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log(tournaments);
+      }
+  });
+}
 // addTournament("Turki Tournament","2023-5-10","2023-6-10");
 // deleteTournament(12);
 
@@ -128,13 +139,13 @@ function newSignUP(Name,Email,Password,Phone,callback){
   connection.query(signUpSql, (error, signUp) => {
       if (error) {
         console.log(error);
-        callback(error);
+        callback(error,null);
       }
       else {
-        callback(signUp);
+        callback(null,signUp);
       }
   });
 }
 // newSignUP("Mostafa","m@gmail.com","123456","0500000000");
-module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,getSignIN,newSignUP};
+module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,deleteTournamentName,getSignIN,newSignUP};
 // Just to end the connection

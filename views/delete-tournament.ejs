@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <!-- Scirpt -->
+    <!-- <script src="/public/scripts/admin.js"></script> -->
+    <title>delete-tournament</title>
+</head>
+<body style=" background-color: #E4DEDE;">
+
+  <!-- header -->
+    <div class="container">
+        <header class="header">
+          <div class="header-left">
+            <img src="Assets/football.png" alt="Website Icon">
+            <h1 class="header-title"><a href="/admin" style="color: green;">KFUPMSOC</a></h1>
+          </div>
+          
+          <div class="header-right">
+           <a href="/Sign-in"> <button class="header-button">Sign out</button></a>
+          </div>
+        </header>
+    
+
+        <!-- image with text and book now button -->
+  <div class="content">
+    <div class="content-text">
+      <p><span class="content-text-break" style="font-size: 3rem;">Name: <%= locals.trName %></span></p>
+      <p><span class="content-text-break" style="font-size: 3rem;">ID: <%= locals.tournamentId %></span></p>
+      <p><span class="content-text-break" style="font-size: 2rem;font-weight: bold;">Tournament deleted</span></p>
+      <a href="/admin"><button class="card-button" style="background-color: grey; margin-left: 40%;">go back</button></a>
+    </div>
+
+  </div>
+        
+    <!-- end of main body -->
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-item">
+          <a href="#">Home</a>
+        </div>
+        <div class="footer-item">
+          <a href="#">About</a>
+        </div>
+        <div class="footer-item">
+          <a href="#">Contact us</a>
+        </div>
+      </div>
+      <div class="footer-copy">
+        &copy; 2023 all right reserved for KFUPMSOC
+      </div>
+    </footer>
+</div>
+</body>
+</html>

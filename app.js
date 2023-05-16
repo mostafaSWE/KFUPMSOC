@@ -362,7 +362,7 @@ function getTeamData(teamId, callback) {
 
 app.get('/Sign-in', (req, res) => {
   // check if qurey has anything inside it
-  if(Object.keys(req.query).length !== 0){
+  if(req.query !== 0){
     var signInInfo= req.query;
     // console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
     dataAccess.getSignIN(signInInfo.email, signInInfo.password, (error, signData) => {
@@ -398,14 +398,51 @@ app.get('/Sign-in', (req, res) => {
 
 //if query is empty
 else{
-    console.log("sss")
     res.render('Sign-in');
   }
   
 });
 
 app.get('/Sign-up', (req, res) => {
-  res.render('Sign-up');
+  if(req.query !== 0){
+    var signInInfo= req.query;
+    // console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
+    dataAccess.newSignUP(signInInfo.name,signInInfo.email, signInInfo.password,signInInfo.phone, (error, signData) => {
+      if (error) {
+        console.log(error);
+        res.render('Sign-up');
+      }
+      else {
+        if (signData.length == 0) {
+          res.render('Sign-up');
+        }
+        else {
+          // console.log("Raw data is "+signData);
+          const tournamentSql = 'SELECT * FROM tournament';
+          connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+            if (tournamentError) {
+              throw tournamentError;
+            }
+            getPlayerWithMostGoals((playerError, playerResult) => {
+              if (playerError) {
+                throw playerError;
+              }
+              res.render('admin', {
+                tournaments: tournamentResults,
+                mostGoalsPlayer: playerResult[0]
+              });
+            });
+          });
+        }
+      }
+    });
+  }
+
+//if query is empty
+else{
+    res.render('Sign-up');
+  }
+  
 });
 
 app.get('/viewRequests', (req, res) => {
@@ -426,7 +463,9 @@ app.get('/viewRequests', (req, res) => {
   });
 });
 // handle GET request to /admin route
+
 app.get('/Admin', (req, res) => {
+  console.log(req.query);
   const tournamentSql = 'SELECT * FROM tournament';
   
   connection.query(tournamentSql, (tournamentError, tournamentResults) => {
@@ -497,6 +536,26 @@ app.post('/reject-request', (req, res) => {
 app.get('/add-team-to-tournament', (req, res) => {
   // Render the add-team-to-tournament page
   res.render('add-team-to-tournament');
+});
+
+app.get('/delete-tournament', (req, res) => {
+  const tournamentId = req.query.id;
+  const trName = req.query.tr_name;
+  const sql = `SELECT * FROM tournament WHERE tr_id = ${tournamentId} AND tr_name='${trName}'`;
+  console.log(req.query);
+  // call the getTournamentData function with the tournamentId
+  connection.query(sql, (error, data) => {
+    if (error) {
+      res.render('delete-tournament', { error:error});
+    } else if(data.length ==0) {
+      console.log("Erorr in returned data");
+      res.render("admin")
+    }
+    else{  // render the deelete-tournament.ejs template with the teamData and matchData objects
+      res.render('delete-tournament', { tournamentId, trName });
+      dataAccess.deleteTournament(tournamentId);
+    }
+  });
 });
 
 function getTeamData(teamId, callback) {
