@@ -26,6 +26,9 @@ body {
   padding-right: 20px;
   margin-right: 20px;
 }
+/* .content-text #delbtn{
+  align-items: center;
+} */
 
 .content-text #first-p {
   font-size: 40px;
@@ -49,6 +52,7 @@ body {
 
 .content-text-break {
   display: block;
+  text-align: center;
 }
 
 

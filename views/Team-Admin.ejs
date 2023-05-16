@@ -132,6 +132,30 @@ th, td {
                   <% } %>
 
                   <h1 class="header__title">Team Captain</h1>
+
+                  <form method="POST" action="/add-captain">
+                    <h2>Select Match Captain</h2>
+                    
+                    <div class="form-group">
+                      <label for="captain-select">Select Player:</label>
+                      <select class="form-control" id="captain-select" name="captain_id">
+                        <% for (let i = 0; i < team.players.length; i++) { %>
+                          <option value="<%= team.players[i].player_id %>"><%= team.players[i].player_name %></option>
+                        <% } %>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="team_id">Team ID:</label>
+                        <input type="number" class="form-control" id="team_id" name="team_id" value="<%= teamId %>" readonly>
+                      </div>
+                    <div class="form-group">
+                      <label for="match-no-input">Match Number:</label>
+                      <input type="number" class="form-control" id="match-no-input" name="match_no" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Captain</button>
+                  </form>
+
+
                   <% if (captain) { %>
                     <p><%= captain.player_captain %></p>
                   <% } else { %>

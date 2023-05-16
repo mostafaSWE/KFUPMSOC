@@ -24,6 +24,10 @@ connection.connect((err) => {
 // Set up EJS templating engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+const flash = require('connect-flash');
+app.use(flash());
 
 // Route to display data from MySQL in the frontend
 // app.get("/", (req, res) => {
@@ -138,6 +142,21 @@ app.get('/tournament', (req, res) => {
     }
   });
 });
+app.get('/Tournament-Admin', (req, res) => {
+  const tournamentId = req.query.id;
+  const trName = req.query.tr_name;
+
+  // call the getTournamentData function with the tournamentId
+  getTournamentData(tournamentId, (error, data) => {
+    if (error) {
+      const message = error.includes('not found') ? `No data available for tournament ${tournamentId}` : 'Error fetching tournament data';
+      res.render('Tournament-Admin', { error: message });
+    } else {
+      // render the tournament.ejs template with the teamData and matchData objects
+      res.render('Tournament-Admin', { teams: data.teams, matches: data.matches, trName });
+    }
+  });
+});
 function getTournamentData(tournamentId, callback) {
   // define the SQL queries to fetch the team data and match data for the tournament
   const teamSql = `SELECT * FROM team WHERE tr_id = ${tournamentId}`;
@@ -181,41 +200,86 @@ app.post('/join-team', (req, res) => {
     return;
   }
 
-  // insert player into database
-  const query = 'INSERT INTO players(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
-  connection.query(query, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (error, results) => {
-    if (error) {
-      console.error(error);
+  // check if the player has already sent a join request
+  const checkQuery = 'SELECT * FROM join_requests WHERE player_id = ? AND team_id = ?';
+  connection.query(checkQuery, [player_id, team_id], (checkError, checkResults) => {
+    if (checkError) {
+      console.error(checkError);
       res.status(500).send('Error joining team. Please try again later.');
       return;
     }
-    res.redirect(`/tournament?id=${team_id}`);
+
+    if (checkResults.length > 0) {
+      res.status(400).send('You have already sent a join request to this team.');
+      return;
+    }
+
+    // insert player into join_requests table
+    const insertQuery = 'INSERT INTO join_requests(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+    connection.query(insertQuery, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (insertError, insertResults) => {
+      if (insertError) {
+        console.error(insertError);
+        res.status(500).send('Error joining team. Please try again later.');
+        return;
+      }
+      // Redirect to the team page with a success message
+      res.redirect(`/team?id=${team_id}&message=Join request sent successfully`);
+    });
+  });
+});
+app.get('/Team-Admin', (req, res) => {
+  const teamId = req.query.id;
+
+  // call the getTeamData function with the teamId
+  getTeamData(teamId, (error, teamData) => {
+    if (error) {
+      const errorMessage = 'No data available for'+ teamId;
+      res.render('Team-Admin', {
+        errorMessage: errorMessage,
+        teamId: teamId
+      });
+    } else {
+      // render the Team.ejs template with the teamData object, including coach, manager, captain, and red card data
+      res.render('Team-Admin', {
+        team: teamData,
+        coach: teamData.coach,
+        manager: teamData.manager,
+        captain: teamData.captain,
+        redCards: teamData.redCards, // add red card data to template
+        teamId: teamId
+      });
+    }
   });
 });
 
-// app.post('/add-team', (req, res) => {
-//   const { teamId, tournamentId, teamGroup, matchPlayed, won, draw, lost, goalFor, goalAgainst, goalDiff, points, groupPosition} = req.body;
+// app.js
 
-//   // validate form fields
-//   if (!teamId || !tournamentId || !teamGroup || !matchPlayed || !won || !draw || !lost || !goalFor || !goalAgainst || !goalDiff || !points || !groupPosition) {
-//     res.status(400).send('All fields are required.');
-//     return;
-//   }
+// handle POST request to /add-captain route
+app.post('/add-captain', (req, res) => {
+  const { team_id, captain_id, match_no } = req.body;
 
-//   // insert team into database
-//   const query = 'INSERT INTO team(team_id, tr_id, team_group, match_played, won, draw, lost, goal_for, goal_against, goal_diff, points, group_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
-//   connection.query(query, [teamId, tournamentId, teamGroup, matchPlayed, won, draw, lost, goalFor, goalAgainst, goalDiff, points, groupPosition], (error, results) => {
-//     if (error) {
-//       console.error(error);
-//       res.status(500).send('Error adding team. Please try again later.');
-//       return;
-//     }
-//     res.redirect(`/tournament?id=${tournamentId}`);
-//   });
-// });
+  // validate form fields
+  if (!team_id || !captain_id || !match_no) {
+    res.status(400).send('All fields are required.');
+    return;
+  }
 
+  // insert row into match_captain table
+  const insertQuery = 'INSERT INTO match_captain(match_no, team_id, player_captain) VALUES (?, ?, ?)';
+  connection.query(insertQuery, [match_no, team_id, captain_id], (insertError, insertResult) => {
+    if (insertError) {
+      console.error(insertError);
+      res.status(500).send('An error occurred while adding the captain.');
+      return;
+    }
+
+    // Redirect to the team page with a success message
+    res.redirect(`/team?id=${team_id}&message=Captain added successfully`);
+  });
+});
 app.get('/Team', (req, res) => {
   const teamId = req.query.id;
+  console.log(teamId);
 
   // call the getTeamData function with the teamId
   getTeamData(teamId, (error, teamData) => {
@@ -226,6 +290,7 @@ app.get('/Team', (req, res) => {
         teamId: teamId
       });
     } else {
+      console.log(teamData);
       // render the Team.ejs template with the teamData object, including coach, manager, captain, and red card data
       res.render('Team', {
         team: teamData,
@@ -294,23 +359,37 @@ function getTeamData(teamId, callback) {
   });
 }
 
-app.get('/Sign-in', async(req, res) => {
+app.get('/Sign-in', (req, res) => {
   // check if qurey has anything inside it
-  if(Object.keys(req.query).length !== 0){
+  if(req.query !== 0){
     var signInInfo= req.query;
-    console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
-    await dataAccess.getSignIN(signInInfo.email,signInInfo.password,(error,signData)=>{
-      if(error){
+    // console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
+    dataAccess.getSignIN(signInInfo.email, signInInfo.password, (error, signData) => {
+      if (error) {
         console.log(error);
         res.render('Sign-in');
       }
-      else{
-        if(signData.length==0){
+      else {
+        if (signData.length == 0) {
           res.render('Sign-in');
         }
         else{
           console.log(signData);
-          res.redirect('./views/admin');
+          const tournamentSql = 'SELECT * FROM tournament';
+          connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+            if (tournamentError) {
+              throw tournamentError;
+            }
+            getPlayerWithMostGoals((playerError, playerResult) => {
+              if (playerError) {
+                throw playerError;
+              }
+              res.render('admin', {
+                tournaments: tournamentResults,
+                mostGoalsPlayer: playerResult[0]
+              });
+            });
+          });
         } 
       }
     });
@@ -318,34 +397,138 @@ app.get('/Sign-in', async(req, res) => {
 
 //if query is empty
 else{
-    console.log("sss")
     res.render('Sign-in');
   }
   
 });
 
 app.get('/Sign-up', (req, res) => {
-  res.render('Sign-up');
+  if(req.query !== 0){
+    var signInInfo= req.query;
+    // console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
+    dataAccess.newSignUP(signInInfo.name,signInInfo.email, signInInfo.password,signInInfo.phone, (error, signData) => {
+      if (error) {
+        console.log(error);
+        res.render('Sign-up');
+      }
+      else {
+        if (signData.length == 0) {
+          res.render('Sign-up');
+        }
+        else {
+          // console.log("Raw data is "+signData);
+          const tournamentSql = 'SELECT * FROM tournament';
+          connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+            if (tournamentError) {
+              throw tournamentError;
+            }
+            getPlayerWithMostGoals((playerError, playerResult) => {
+              if (playerError) {
+                throw playerError;
+              }
+              res.render('admin', {
+                tournaments: tournamentResults,
+                mostGoalsPlayer: playerResult[0]
+              });
+            });
+          });
+        }
+      }
+    });
+  }
+
+//if query is empty
+else{
+    res.render('Sign-up');
+  }
+  
 });
 
-app.get('/Admin', (req, res) => {
-  const tournamentSql = 'SELECT * FROM tournament';
-  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
-    if (tournamentError) {
-      throw tournamentError;
+app.get('/viewRequests', (req, res) => {
+  const joinRequestsSql = 'SELECT * FROM join_requests';
+
+  connection.query(joinRequestsSql, (joinRequestsError, joinRequestsResults) => {
+    if (joinRequestsError) {
+      console.error('Error retrieving join requests:', joinRequestsError);
+      res.status(500).send('An error occurred while retrieving join requests');
+      return;
     }
-    getPlayerWithMostGoals((playerError, playerResult) => {
-      if (playerError) {
-        throw playerError;
+
+    console.log(joinRequestsResults);
+
+    res.render('viewRequests', {
+      joinRequests: joinRequestsResults
+    });
+  });
+});
+// handle GET request to /admin route
+
+app.get('/Admin', (req, res) => {
+  console.log(req.query);
+  const tournamentSql = 'SELECT * FROM tournament';
+  
+  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+  if (tournamentError) {
+  throw tournamentError;
+  }
+  getPlayerWithMostGoals((playerError, playerResult) => {
+  if (playerError) {
+  throw playerError;
+  }
+  res.render('admin', {
+  tournaments: tournamentResults,
+  mostGoalsPlayer: playerResult[0]
+  });
+  });
+  });
+  });
+
+// handle POST request to /approve-request route
+// handle POST request to /approve-request route
+app.post('/approve-request', (req, res) => {
+  const { player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir } = req.body;
+
+  // insert row into player table
+  const insertQuery = 'INSERT INTO player(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(insertQuery, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (insertError, insertResult) => {
+    if (insertError) {
+      console.error(insertError);
+      res.status(500).send('An error occurred while approving the request.');
+      return;
+    }
+
+    // delete row from join_requests table
+    const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
+    connection.query(deleteQuery, [player_id, team_id], (deleteError, deleteResult) => {
+      if (deleteError) {
+        console.error(deleteError);
+        res.status(500).send('An error occurred while approving the request.');
+        return;
       }
-      res.render('admin', {
-        tournaments: tournamentResults,
-        mostGoalsPlayer: playerResult[0]
-      });
+
+      // Redirect to the viewRequests page with a success message
+      res.redirect('/viewRequests?message=Request approved successfully');
     });
   });
 });
 
+// handle POST request to /reject-request route
+app.post('/reject-request', (req, res) => {
+  const { player_id, team_id } = req.body;
+
+  // delete row from join_requests table
+  const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
+  connection.query(deleteQuery, [player_id, team_id], (deleteError, deleteResult) => {
+    if (deleteError) {
+      console.error(deleteError);
+      res.status(500).send('An error occurred while rejecting the request.');
+      return;
+    }
+
+    // Redirect to the viewRequests page with a success message
+    res.redirect('/viewRequests?message=Request rejected successfully');
+  });
+});
 
 app.get('/add-tournament', (req, res) => {
   // Render the add-tournament page
@@ -355,6 +538,26 @@ app.get('/add-tournament', (req, res) => {
 app.get('/add-team-to-tournament', (req, res) => {
   // Render the add-team-to-tournament page
   res.render('add-team-to-tournament');
+});
+
+app.get('/delete-tournament', (req, res) => {
+  const tournamentId = req.query.id;
+  const trName = req.query.tr_name;
+  const sql = `SELECT * FROM tournament WHERE tr_id = ${tournamentId} AND tr_name='${trName}'`;
+  console.log(req.query);
+  // call the getTournamentData function with the tournamentId
+  connection.query(sql, (error, data) => {
+    if (error) {
+      res.render('delete-tournament', { error:error});
+    } else if(data.length ==0) {
+      console.log("Erorr in returned data");
+      res.render("admin")
+    }
+    else{  // render the deelete-tournament.ejs template with the teamData and matchData objects
+      res.render('delete-tournament', { tournamentId, trName });
+      dataAccess.deleteTournament(tournamentId);
+    }
+  });
 });
 
 function getTeamData(teamId, callback) {

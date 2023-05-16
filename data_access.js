@@ -104,35 +104,22 @@ function deleteTournament(tournamentID){
       }
   });
 }
-
-function addTeam(team_id, tr_id, team_group, match_played, won, draw, lost, goal_for, goal_against, goal_diff, points, group_position){
-  const teamSql = `INSERT INTO team (team_id,tr_id,team_group,match_played,won,draw,lost,goal_for,goal_against,goal_diff,points,group_position) VALUES ('${team_id}','${tr_id}','${team_group}','${match_played}','${won}','${draw}','${lost}','${goal_for}','${goal_diff}','${points}','${group_position}')`;
-  connection.query(teamSql, (error, team) => {
-      if (error) {
-        console.log(error);
-      }
-      else {
-        var teamData = team;
-        console.log(teamData);
-      }
-  });
-}
 // addTournament("Turki Tournament","2023-5-10","2023-6-10");
 // deleteTournament(12);
 
 
 function getSignIN(Email,Password,callback){
-  console.log("The entered email is :"+Email);
-  console.log("The entered password is :" + Password);
+  // console.log("The entered email is :"+Email);
+  // console.log("The entered password is :" + Password);
   const signInSql =`SELECT * FROM admins WHERE email='${Email}' AND password='${Password}'`;
   connection.query(signInSql, (error, signIn) => {
       if (error) {
         let message = "The sign in information is wrong";
         console.log(error);
-        callback(message);
+        callback(message, null);
       }
       else {
-        callback(signIn);
+        callback(null, signIn);
       }
   });
 }
@@ -141,13 +128,13 @@ function newSignUP(Name,Email,Password,Phone,callback){
   connection.query(signUpSql, (error, signUp) => {
       if (error) {
         console.log(error);
-        callback(error);
+        callback(error,null);
       }
       else {
-        callback(signUp);
+        callback(null,signUp);
       }
   });
 }
 // newSignUP("Mostafa","m@gmail.com","123456","0500000000");
-module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,getSignIN,newSignUP};
+module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,deleteTournamentName,getSignIN,newSignUP};
 // Just to end the connection
