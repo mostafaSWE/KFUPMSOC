@@ -46,7 +46,7 @@ app.get('/', (req, res) => {
       if (playerError) {
         throw playerError;
       }
-      res.render('home', {
+      res.render('Admin', {
         tournaments: tournamentResults,
         mostGoalsPlayer: playerResult[0]
       });
@@ -192,6 +192,28 @@ app.post('/join-team', (req, res) => {
     res.redirect(`/tournament?id=${team_id}`);
   });
 });
+
+// app.post('/add-team', (req, res) => {
+//   const { teamId, tournamentId, teamGroup, matchPlayed, won, draw, lost, goalFor, goalAgainst, goalDiff, points, groupPosition} = req.body;
+
+//   // validate form fields
+//   if (!teamId || !tournamentId || !teamGroup || !matchPlayed || !won || !draw || !lost || !goalFor || !goalAgainst || !goalDiff || !points || !groupPosition) {
+//     res.status(400).send('All fields are required.');
+//     return;
+//   }
+
+//   // insert team into database
+//   const query = 'INSERT INTO team(team_id, tr_id, team_group, match_played, won, draw, lost, goal_for, goal_against, goal_diff, points, group_position) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)';
+//   connection.query(query, [teamId, tournamentId, teamGroup, matchPlayed, won, draw, lost, goalFor, goalAgainst, goalDiff, points, groupPosition], (error, results) => {
+//     if (error) {
+//       console.error(error);
+//       res.status(500).send('Error adding team. Please try again later.');
+//       return;
+//     }
+//     res.redirect(`/tournament?id=${tournamentId}`);
+//   });
+// });
+
 app.get('/Team', (req, res) => {
   const teamId = req.query.id;
 
@@ -325,7 +347,10 @@ app.get('/Admin', (req, res) => {
 });
 
 
-
+app.get('/add-tournament', (req, res) => {
+  // Render the add-tournament page
+  res.render('add-tournament');
+});
 
 app.get('/add-team-to-tournament', (req, res) => {
   // Render the add-team-to-tournament page

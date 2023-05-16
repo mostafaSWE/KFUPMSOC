@@ -1,26 +1,173 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <link rel="stylesheet" href="/Home/add-team-to-tournament.css">
+  <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+  <title>Team Information</title>
+  <style>
+    body {
+      background-color: #E4DEDE;
+      margin: 0;
+      padding: 0;
+    }
+  
+    .container {
+      margin-left: auto;
+      margin-right: auto;
+      margin: 0 auto;
+      padding: 20px;
+      box-sizing: border-box;
+      background-color: #fff;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+  
+    form {
+      margin-top: 20px;
+    }
+  
+    .form-group {
+      margin-bottom: 20px;
+    }
+  
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 5px;
+    }
+  
+    .form-control {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      box-sizing: border-box;
+      font-size: 16px;
+    }
+    
+    .btn-primary  {
+      width: 100%;
+      padding: 10px;
+      background-color: #4CAF50;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 16px;
+    }
 
-  <title>Add a team to a tournament</title>
+    .btn-primary:hover {
+      background-color: #45a049;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    footer {
+      margin-top: 40px;
+      text-align: center;
+      font-size: 14px;
+      color: #888;
+    }
+  
+    footer a {
+      color: #888;
+      text-decoration: none;
+    }
+  
+    footer a:hover {
+      text-decoration: underline;
+    }
+</style>   
 </head>
-<body>
-  <div class="container">
-    <div class="header">
-      <h1>Add a team to a tournament</h1>
-      <a href="#" class="back-btn"><i class="fas fa-arrow-left"></i> Back to Menu</a>
+<body style=" background-color: #E4DEDE;">
+   <!-- header -->
+
+   <div class="container">
+    <header class="header">
+      <div class="header-left">
+        <img src="Assets/football.png" alt="Website Icon">
+        <h1 class="header-title"><a href="/" style="color: green;">KFUPMSOC</a></h1>
+      </div>
+      
+      <div class="header-right">
+       <a href="/Sign-in"> <button class="header-button">Sign In</button></a>
+      </div>
+    </header>
+
+  <h1>Team Information</h1>
+
+  <form>
+    <form action="/add-team" method="post">
+    <div class="form-group">
+      <label for="team_id">Team ID:</label>
+      <input type="number" class="form-control" id="team_id" name="team_id" required>
     </div>
-    <div class="form-container">
-      <form>
-        </div>
-        <div class="form-group">
-          <label for="team-name">Team Name:</label>
-          <input type="text" id="team-name" placeholder="Enter team name" required>
-        </div>
-        <button type="submit" id="add-team-btn">Add Team</button>
-      </form>
+    <div class="form-group">
+      <label for="tr_id">Tournament ID:</label>
+      <input type="number" class="form-control" id="tr_id" name="tr_id" required>
     </div>
-  </div>
+    <div class="form-group">
+      <label for="team_group">Team Group:</label>
+      <input type="text" class="form-control" id="team_group" name="team_group" maxlength="1" required>
+    </div>
+    <div class="form-group">
+      <label for="match_played">Match Played:</label>
+      <input type="text" class="form-control" id="match_played" name="match_played" required>
+    </div>
+    <div class="form-group">
+      <label for="won">Won:</label>
+      <input type="number" class="form-control" id="won" name="won" required>
+    </div>
+    <div class="form-group">
+      <label for="draw">Draw:</label>
+      <input type="number" class="form-control" id="draw" name="draw" required>
+    </div>
+    <div class="form-group">
+      <label for="lost">Lost:</label>
+      <input type="number" class="form-control" id="lost" name="lost" required>
+    </div>
+    <div class="form-group">
+      <label for="goal_for">Goal For:</label>
+      <input type="number" class="form-control" id="goal_for" name="goal_for" required>
+    </div>
+    <div class="form-group">
+      <label for="goal_against">Goal Against:</label>
+      <input type="number" class="form-control" id="goal_against" name="goal_against" required>
+    </div>
+    <div class="form-group"">
+      <label for="goal_diff">Goal Difference:</label>
+      <input type="number" class="form-control" id="goal_diff" name="goal_diff" required>
+    </div>
+    <div class="form-group">
+      <label for="points">Points:</label>
+      <input type="number" class="form-control" id="points" name="points" required>
+    </div>
+    <div class="form-group">
+      <label for="group_position">Group Position:</label>
+      <input type="number" class="form-control" id="group_position" name="group_position" required>
+    </div>
+    <button type="submit" class="btn-primary">Add Team</button>
+  </form>
+        <!-- Footer -->
+        <footer class="footer">
+          <div class="footer-container">
+            <div class="footer-item">
+              <a href="#">Home</a>
+            </div>
+            <div class="footer-item">
+              <a href="#">About</a>
+            </div>
+            <div class="footer-item">
+              <a href="#">Contact us</a>
+            </div>
+          </div>
+          <div class="footer-copy">
+            &copy; 2023 all right reserved for KFUPMSOC
+          </div>
+        </footer>
 </body>
 </html>

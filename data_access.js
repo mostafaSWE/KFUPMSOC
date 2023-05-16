@@ -104,6 +104,19 @@ function deleteTournament(tournamentID){
       }
   });
 }
+
+function addTeam(team_id, tr_id, team_group, match_played, won, draw, lost, goal_for, goal_against, goal_diff, points, group_position){
+  const teamSql = `INSERT INTO team (team_id,tr_id,team_group,match_played,won,draw,lost,goal_for,goal_against,goal_diff,points,group_position) VALUES ('${team_id}','${tr_id}','${team_group}','${match_played}','${won}','${draw}','${lost}','${goal_for}','${goal_diff}','${points}','${group_position}')`;
+  connection.query(teamSql, (error, team) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        var teamData = team;
+        console.log(teamData);
+      }
+  });
+}
 // addTournament("Turki Tournament","2023-5-10","2023-6-10");
 // deleteTournament(12);
 

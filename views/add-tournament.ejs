@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+  <title>Add Tournament</title>
+  <style>
+    body {
+        background-color: #E4DEDE;
+        margin: 0;
+        padding: 0;
+    }
+
+    .container {
+        margin-left: auto;
+        margin-right: auto;
+        margin: 0 auto;
+        padding: 20px;
+        box-sizing: border-box;
+        background-color: #fff;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    form {
+        margin-top: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+        font-size: 16px;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        background-color: #4CAF50;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        background-color: #4CAF50;
+    }
+
+    .btn-primary:hover {
+        background-color: #45a049;
+    }
+
+    h1 {
+        text-align: center;
+    }
+
+    footer {
+        margin-top: 40px;
+        text-align: center;
+        font-size: 14px;
+        color: #888;
+    }
+
+    footer a {
+        color: #888;
+        text-decoration: none;
+    }
+
+    footer a:hover {
+        text-decoration: underline;
+    }
+</style>
+</head>
+<body style=" background-color: #E4DEDE;">
+
+  <!-- header -->
+
+    <div class="container">
+        <header class="header">
+          <div class="header-left">
+            <img src="Assets/football.png" alt="Website Icon">
+            <h1 class="header-title"><a href="/" style="color: green;">KFUPMSOC</a></h1>
+          </div>
+          
+          <div class="header-right">
+           <a href="/Sign-in"> <button class="header-button">Sign In</button></a>
+          </div>
+        </header>
+        
+  <h1>Add Tournament</h1>
+  
+  <form>
+    <div class="form-group">
+        <label for="tournamentId">Tournament ID:</label>
+        <input type="number" class="form-control" id="tournamentId" name="tournamentId" required>
+    </div>
+    <div class="form-group">
+        <label for="tournamentName">Tournament Name:</label>
+        <input type="text" class="form-control" id="tournamentName" name="tournamentName" required>
+    </div>
+    <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" class="form-control" id="startDate" name="startDate" required>
+    </div>
+    <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" class="form-control" id="endDate" name="endDate" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Tournament</button>
+  </form>
+
+      <!-- Footer -->
+      <footer class="footer">
+        <div class="footer-container">
+          <div class="footer-item">
+            <a href="#">Home</a>
+          </div>
+          <div class="footer-item">
+            <a href="#">About</a>
+          </div>
+          <div class="footer-item">
+            <a href="#">Contact us</a>
+          </div>
+        </div>
+        <div class="footer-copy">
+          &copy; 2023 all right reserved for KFUPMSOC
+        </div>
+      </footer>
+</body>
+</html>
