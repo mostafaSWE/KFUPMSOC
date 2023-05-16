@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="/css/home.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
-    <title>Document</title>
+    <title>Home</title>
 </head>
 <body style=" background-color: #E4DEDE;">
 
@@ -26,59 +26,27 @@
           </div>
         </header>
     
-
-        <!-- image with text and book now button -->
    
   <div class="content">
     <div class="content-text">
       <p id="first-p">Welcom to <span class="content-text-break">KFUPMSOC</span></p>
       <p id="second-p">Your destination to follow campus football.</p>
-    <!-- <a href="/Booking/booking.html">  <span class="book-now">
-        Book now
-      </span></a> -->
     </div>
-    <!-- <div class="content-image">
-      <img src="Assets/feild.png" alt="Restaurant Image">
-    </div> -->
 
   </div>
   <hr class="hr-content">
   
 
-  
 
-
- 
-
-
-        <!-- Searching tool  and the main body-->
+        <!-- the main body-->
         <div class="container">
           <h1 class="header__title">KFUPMSOC highlights</h1>
           <h2>Player with most goals</h2>
           <p>Name: <%= mostGoalsPlayer.player_name %></p>
           <p>Goals: <%= mostGoalsPlayer.goals %></p>
           <hr class="hr-content">
+          <!-- Tournamanets section -->
             <h1 class="header__title">Tournaments</h1>
-            <!-- <div class="header__search">
-              <div class="header__search-left">
-                <input class="header__search-input" type="text" placeholder="Search...">
-                <button class="header__search-btn">Search</button>
-              </div>
-              <div class="header__search-middle">
-                <input type="checkbox" id="favorites" name="favorites">
-                <label for="favorites">Show Favorites</label>
-              </div>
-              <div class="header__search-right">
-                <select class="header__search-select" name="filter">
-                  <option value="">All</option>
-                  <option value="italian">Italian</option>
-                  <option value="chinese">Chinese</option>
-                  <option value="mexican">Mexican</option>
-                  <option value="american">American</option>
-                </select>
-              </div>
-            </div> -->
-            <!-- Card  -->
             <div class="card-container">
               <% tournaments.forEach(function(tournament) { %>
                 <div class="card">
@@ -87,28 +55,16 @@
                   </div>
                   <h2 class="card-name"><%= tournament.tr_name %></h2>
                   
-                  
                   <div class="card-buttons">
                     <a href="/tournament?id=<%= tournament.tr_id %>&tr_name=<%= tournament.tr_name %>"><button class="card-button">Browse Tournament</button></a>
                   </div>
                 </div>
-
                 
                 <% }); %>
-                
-                
-                
 
               </div>
-              
-              
     </div>
     <!-- end of main body -->
-
-
-
-
-
     <!-- Footer -->
     <footer class="footer">
       <div class="footer-container">

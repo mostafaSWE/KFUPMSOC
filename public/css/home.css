@@ -455,7 +455,14 @@ body {
 
 
 
-
+table{
+  border-collapse: collapse;
+  border-spacing: 1rem;
+}
+td,th{
+  border: 1px solid black;
+  padding: 1rem;
+}
 
 /*--------------- footer ----*/ 
 .footer {
@@ -483,5 +490,7 @@ body {
   text-align: center;
   margin-top: auto;
 }
+
+
 
 /*------------------ footer end -------/*

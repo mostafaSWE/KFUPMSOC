@@ -5,7 +5,7 @@ const connection = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
   password: "",
-  database: "ics321",
+  database: "ics321-2",
 });
 
 // Connect to MySQL
@@ -13,7 +13,7 @@ connection.connect((err) => {
   if (err) {
     throw err;
   }
-  console.log("Connected to MySQL server\n");
+  console.log("Data access is connected to MySQL server\n");
 });
 
 
@@ -80,7 +80,48 @@ function addManger(managerID,team_id){
     });
 }
 
-addManger(5555,1244);
-module.exports={getCoaches,addCoach,getManagers,addManger};
+
+function addTournament(tournamentName,startDate,endDate){
+  const tournamentSql = `INSERT INTO tournament (tr_name,start_date,end_date) VALUES ('${tournamentName}','${startDate}','${endDate}')`;
+  connection.query(tournamentSql, (error, tournaments) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log(tournaments);
+      }
+  });
+}
+// This function uses the tournament name to 
+function deleteTournament(tournamentID){
+  const tournamentSql = `DELETE FROM tournament WHERE tr_id =${tournamentID}`;
+  connection.query(tournamentSql, (error, tournaments) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log(tournaments);
+      }
+  });
+}
+// addTournament("Turki Tournament","2023-5-10","2023-6-10");
+// deleteTournament(12);
+
+
+async function getSignIN(Email,Password,callback){
+  console.log("The entered email is :"+Email);
+  console.log("The entered password is :" + Password);
+  const signInSql =`SELECT * FROM admins WHERE email='${Email}' AND password='${Password}'`;
+  connection.query(signInSql, (error, signIn) => {
+      if (error) {
+        let message = "The sign in information is wrong";
+        console.log(error);
+        callback(message);
+      }
+      else {
+        callback(signIn);
+      }
+  });
+}
+module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,getSignIN};
 // Just to end the connection
-connection.end();

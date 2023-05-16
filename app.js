@@ -2,6 +2,7 @@ const express = require("express");
 const mysql = require("mysql");
 const app = express();
 const path = require('path');
+const dataAccess = require('./data_access')
 app.use(express.static("public"));
 
 // Set up MySQL connection
@@ -9,7 +10,7 @@ const connection = mysql.createConnection({
   host: "127.0.0.1",
   user: "root",
   password: "",
-  database: "ics321",
+  database: "ics321-2",
 });
 
 // Connect to MySQL
@@ -35,13 +36,21 @@ app.set('view engine', 'ejs');
 //   });
 // });
 
-app.get("/", (req, res) => {
-  const sql = "SELECT * FROM tournament";
-  connection.query(sql, (err, results) => {
-    if (err) {
-      throw err;
+app.get('/', (req, res) => {
+  const tournamentSql = 'SELECT * FROM tournament';
+  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+    if (tournamentError) {
+      throw tournamentError;
     }
-    res.render("Home", { tournaments: results });
+    getPlayerWithMostGoals((playerError, playerResult) => {
+      if (playerError) {
+        throw playerError;
+      }
+      res.render('home', {
+        tournaments: tournamentResults,
+        mostGoalsPlayer: playerResult[0]
+      });
+    });
   });
 });
 
@@ -263,18 +272,41 @@ function getTeamData(teamId, callback) {
   });
 }
 
-app.get('/Sign-in', (req, res) => {
-  // Render the Sign-in page
-  res.render('Sign-in');
+app.get('/Sign-in', async(req, res) => {
+  // check if qurey has anything inside it
+  if(Object.keys(req.query).length !== 0){
+    var signInInfo= req.query;
+    console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
+    await dataAccess.getSignIN(signInInfo.email,signInInfo.password,(error,signData)=>{
+      if(error){
+        console.log(error);
+        res.render('Sign-in');
+      }
+      else{
+        if(signData.length==0){
+          res.render('Sign-in');
+        }
+        else{
+          console.log(signData);
+          res.redirect('./views/admin');
+        }
+      }
+    });
+  }
+
+//if query is empty
+else{
+    console.log("sss")
+    res.render('Sign-in');
+  }
+  
 });
 
 app.get('/Sign-up', (req, res) => {
-  // Render the Sign-in page
   res.render('Sign-up');
 });
 
 app.get('/Admin', (req, res) => {
-  // Render the Sign-in page
   res.render('Admin');
 });
 
