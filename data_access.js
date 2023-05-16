@@ -108,7 +108,7 @@ function deleteTournament(tournamentID){
 // deleteTournament(12);
 
 
-async function getSignIN(Email,Password,callback){
+function getSignIN(Email,Password,callback){
   console.log("The entered email is :"+Email);
   console.log("The entered password is :" + Password);
   const signInSql =`SELECT * FROM admins WHERE email='${Email}' AND password='${Password}'`;
@@ -123,5 +123,18 @@ async function getSignIN(Email,Password,callback){
       }
   });
 }
-module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,getSignIN};
+function newSignUP(Name,Email,Password,Phone,callback){
+  const signUpSql = `INSERT INTO admins (name,email,password,phone) VALUES ('${Name}','${Email}','${Password}','${Phone}')`;
+  connection.query(signUpSql, (error, signUp) => {
+      if (error) {
+        console.log(error);
+        callback(error);
+      }
+      else {
+        callback(signUp);
+      }
+  });
+}
+// newSignUP("Mostafa","m@gmail.com","123456","0500000000");
+module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,getSignIN,newSignUP};
 // Just to end the connection

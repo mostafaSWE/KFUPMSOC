@@ -293,7 +293,7 @@ app.get('/Sign-in', async(req, res) => {
         else{
           console.log(signData);
           res.redirect('./views/admin');
-        }
+        } 
       }
     });
   }
@@ -311,7 +311,21 @@ app.get('/Sign-up', (req, res) => {
 });
 
 app.get('/Admin', (req, res) => {
-  res.render('Admin');
+  const tournamentSql = 'SELECT * FROM tournament';
+  connection.query(tournamentSql, (tournamentError, tournamentResults) => {
+    if (tournamentError) {
+      throw tournamentError;
+    }
+    getPlayerWithMostGoals((playerError, playerResult) => {
+      if (playerError) {
+        throw playerError;
+      }
+      res.render('admin', {
+        tournaments: tournamentResults,
+        mostGoalsPlayer: playerResult[0]
+      });
+    });
+  });
 });
 app.post('/approve-request', (req, res) => {
   const { player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir } = req.body;
