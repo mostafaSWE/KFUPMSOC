@@ -280,6 +280,7 @@ app.post('/add-captain', (req, res) => {
 
 app.get('/Team', (req, res) => {
   const teamId = req.query.id;
+  console.log(teamId);
 
   // call the getTeamData function with the teamId
   getTeamData(teamId, (error, teamData) => {
@@ -290,6 +291,7 @@ app.get('/Team', (req, res) => {
         teamId: teamId
       });
     } else {
+      console.log(teamData);
       // render the Team.ejs template with the teamData object, including coach, manager, captain, and red card data
       res.render('Team', {
         team: teamData,
@@ -358,18 +360,18 @@ function getTeamData(teamId, callback) {
   });
 }
 
-app.get('/Sign-in', async(req, res) => {
+app.get('/Sign-in', (req, res) => {
   // check if qurey has anything inside it
   if(Object.keys(req.query).length !== 0){
     var signInInfo= req.query;
-    console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
-    await dataAccess.getSignIN(signInInfo.email,signInInfo.password,(error,signData)=>{
-      if(error){
+    // console.log("This is sign in info:"+JSON.stringify(signInInfo.email))
+    dataAccess.getSignIN(signInInfo.email, signInInfo.password, (error, signData) => {
+      if (error) {
         console.log(error);
         res.render('Sign-in');
       }
-      else{
-        if(signData.length==0){
+      else {
+        if (signData.length == 0) {
           res.render('Sign-in');
         }
         else{

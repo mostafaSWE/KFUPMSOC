@@ -109,8 +109,8 @@ function deleteTournament(tournamentID){
 
 
 function getSignIN(Email,Password,callback){
-  console.log("The entered email is :"+Email);
-  console.log("The entered password is :" + Password);
+  // console.log("The entered email is :"+Email);
+  // console.log("The entered password is :" + Password);
   const signInSql =`SELECT * FROM admins WHERE email='${Email}' AND password='${Password}'`;
   connection.query(signInSql, (error, signIn) => {
       if (error) {
