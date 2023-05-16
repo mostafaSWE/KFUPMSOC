@@ -30,18 +30,7 @@
   <div class="content">
     <p id="first-p">Welcome<span class="content-text-break">to KFUPMSOC</span></p>
     </div>
-    <% if (typeof messages !== 'undefined' && messages !== null) { %>
-      <% if (messages.success) { %>
-        <div class="alert alert-success">
-          <%= messages.success %>
-        </div>
-      <% } %>
-      <% if (messages.error) { %>
-        <div class="alert alert-danger">
-          <%= messages.error %>
-        </div>
-      <% } %>
-    <% } %>
+    
 
     <% if (typeof joinRequests !== 'undefined' && joinRequests !== null) { %>
       <table>

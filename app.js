@@ -185,15 +185,30 @@ app.post('/join-team', (req, res) => {
     return;
   }
 
-  // insert player into join_requests table
-  const query = 'INSERT INTO join_requests(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
-  connection.query(query, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (error, results) => {
-    if (error) {
-      console.error(error);
+  // check if the player has already sent a join request
+  const checkQuery = 'SELECT * FROM join_requests WHERE player_id = ? AND team_id = ?';
+  connection.query(checkQuery, [player_id, team_id], (checkError, checkResults) => {
+    if (checkError) {
+      console.error(checkError);
       res.status(500).send('Error joining team. Please try again later.');
       return;
     }
-    res.redirect(`/tournament?id=${team_id}`);
+
+    if (checkResults.length > 0) {
+      res.status(400).send('You have already sent a join request to this team.');
+      return;
+    }
+
+    // insert player into join_requests table
+    const insertQuery = 'INSERT INTO join_requests(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+    connection.query(insertQuery, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (insertError, insertResults) => {
+      if (insertError) {
+        console.error(insertError);
+        res.status(500).send('Error joining team. Please try again later.');
+        return;
+      }
+      res.redirect(`/tournament?id=${team_id}`);
+    });
   });
 });
 app.get('/Team', (req, res) => {
@@ -362,31 +377,29 @@ app.get('/Admin', (req, res) => {
   });
 
 // handle POST request to /approve-request route
+// handle POST request to /approve-request route
 app.post('/approve-request', (req, res) => {
   const { player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir } = req.body;
 
-  // delete row from join_requests table
-  const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
-  connection.query(deleteQuery, [player_id, team_id], (error, deleteResult) => {
-    if (error) {
-      console.error(error);
-      req.flash('error', 'Error approving request. Please try again later.');
-      res.redirect('/admin');
+  // insert row into player table
+  const insertQuery = 'INSERT INTO player(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+  connection.query(insertQuery, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (insertError, insertResult) => {
+    if (insertError) {
+      console.error(insertError);
+      res.status(500).send('An error occurred while approving the request.');
       return;
     }
 
-    // insert row into player table
-    const insertQuery = 'INSERT INTO player(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
-    connection.query(insertQuery, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (error, insertResult) => {
-      if (error) {
-        console.error(error);
-        req.flash('error', 'Error approving request. Please try again later.');
-        res.redirect('/admin');
+    // delete row from join_requests table
+    const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
+    connection.query(deleteQuery, [player_id, team_id], (deleteError, deleteResult) => {
+      if (deleteError) {
+        console.error(deleteError);
+        res.status(500).send('An error occurred while approving the request.');
         return;
       }
 
-      req.flash('success', 'Request approved successfully.'); // set the success message
-      res.redirect('/admin');
+      res.status(200).send('Request approved successfully.');
     });
   });
 });
@@ -397,19 +410,16 @@ app.post('/reject-request', (req, res) => {
 
   // delete row from join_requests table
   const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
-  connection.query(deleteQuery, [player_id, team_id], (error, result) => {
-    if (error) {
-      console.error(error);
-      req.flash('error', 'Error rejecting request. Please try again later.');
-      res.redirect('/admin');
+  connection.query(deleteQuery, [player_id, team_id], (deleteError, deleteResult) => {
+    if (deleteError) {
+      console.error(deleteError);
+      res.status(500).send('An error occurred while rejecting the request.');
       return;
     }
 
-    req.flash('success', 'Request rejected successfully.'); // set the success message
-    res.redirect('/admin');
+    res.status(200).send('Request rejected successfully.');
   });
 });
-
 
 
 
