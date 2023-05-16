@@ -24,6 +24,10 @@ connection.connect((err) => {
 // Set up EJS templating engine
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'ejs');
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+const flash = require('connect-flash');
+app.use(flash());
 
 // Route to display data from MySQL in the frontend
 // app.get("/", (req, res) => {
@@ -181,8 +185,8 @@ app.post('/join-team', (req, res) => {
     return;
   }
 
-  // insert player into database
-  const query = 'INSERT INTO players(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+  // insert player into join_requests table
+  const query = 'INSERT INTO join_requests(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
   connection.query(query, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (error, results) => {
     if (error) {
       console.error(error);
@@ -308,6 +312,58 @@ app.get('/Sign-up', (req, res) => {
 
 app.get('/Admin', (req, res) => {
   res.render('Admin');
+});
+app.post('/approve-request', (req, res) => {
+  const { player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir } = req.body;
+
+  // delete row from join_requests table
+  const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
+  connection.query(deleteQuery, [player_id, team_id], (error, deleteResult) => {
+    if (error) {
+      console.error(error);
+      req.flash('error', 'Error approving request. Please try again later.');
+      res.redirect('/Admin');
+      return;
+    }
+
+    // insert row into player table
+    const insertQuery = 'INSERT INTO player(player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir) VALUES (?, ?, ?, ?, ?, ?)';
+    connection.query(insertQuery, [player_id, team_id, jersey_no, player_name, position_to_play, dt_of_bir], (error, insertResult) => {
+      if (error) {
+        console.error(error);
+        req.flash('error', 'Error approving request. Please try again later.');
+        res.redirect('/Admin');
+        return;
+      }
+      req.flash('success', 'Request approved successfully.');
+      res.redirect('/Admin');
+    });
+  });
+});
+
+// handle /reject-request route
+app.post('/reject-request', (req, res) => {
+  const { player_id, team_id } = req.body;
+
+  // delete row from join_requests table
+  const deleteQuery = 'DELETE FROM join_requests WHERE player_id = ? AND team_id = ?';
+  connection.query(deleteQuery, [player_id, team_id], (error, result) => {
+    if (error) {
+      console.error(error);
+      req.flash('error', 'Error rejecting request. Please try again later.');
+      res.redirect('/Admin');
+      return;
+    }
+    req.flash('success', 'Request rejected successfully.');
+    res.redirect('/Admin');
+  });
+});
+
+// pass flash messages to views
+app.use((req, res, next) => {
+  res.locals.errorMessages = req.flash('error');
+  res.locals.successMessages = req.flash('success');
+  next();
 });
 
 
