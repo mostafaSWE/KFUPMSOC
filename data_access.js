@@ -146,6 +146,17 @@ function newSignUP(Name,Email,Password,Phone,callback){
       }
   });
 }
+function deleteTournamentName(tournamentName){
+  const tournamentSql = `DELETE FROM tournament WHERE tr_name =${tournamentName}`;
+  connection.query(tournamentSql, (error, tournaments) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log(tournaments);
+      }
+  });
+}
 // newSignUP("Mostafa","m@gmail.com","123456","0500000000");
 module.exports={getCoaches,addCoach,getManagers,addManger,addTournament,deleteTournament,deleteTournamentName,getSignIN,newSignUP};
 // Just to end the connection
