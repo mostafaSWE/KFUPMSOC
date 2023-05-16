@@ -464,7 +464,6 @@ app.get('/viewRequests', (req, res) => {
 // handle GET request to /admin route
 
 app.get('/Admin', (req, res) => {
-  console.log(req.query);
   const tournamentSql = 'SELECT * FROM tournament';
   
   connection.query(tournamentSql, (tournamentError, tournamentResults) => {
