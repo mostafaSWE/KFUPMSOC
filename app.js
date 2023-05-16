@@ -142,6 +142,21 @@ app.get('/tournament', (req, res) => {
     }
   });
 });
+app.get('/Tournament-Admin', (req, res) => {
+  const tournamentId = req.query.id;
+  const trName = req.query.tr_name;
+
+  // call the getTournamentData function with the tournamentId
+  getTournamentData(tournamentId, (error, data) => {
+    if (error) {
+      const message = error.includes('not found') ? `No data available for tournament ${tournamentId}` : 'Error fetching tournament data';
+      res.render('Tournament-Admin', { error: message });
+    } else {
+      // render the tournament.ejs template with the teamData and matchData objects
+      res.render('Tournament-Admin', { teams: data.teams, matches: data.matches, trName });
+    }
+  });
+});
 function getTournamentData(tournamentId, callback) {
   // define the SQL queries to fetch the team data and match data for the tournament
   const teamSql = `SELECT * FROM team WHERE tr_id = ${tournamentId}`;
@@ -212,6 +227,57 @@ app.post('/join-team', (req, res) => {
     });
   });
 });
+app.get('/Team-Admin', (req, res) => {
+  const teamId = req.query.id;
+
+  // call the getTeamData function with the teamId
+  getTeamData(teamId, (error, teamData) => {
+    if (error) {
+      const errorMessage = 'No data available for'+ teamId;
+      res.render('Team-Admin', {
+        errorMessage: errorMessage,
+        teamId: teamId
+      });
+    } else {
+      // render the Team.ejs template with the teamData object, including coach, manager, captain, and red card data
+      res.render('Team-Admin', {
+        team: teamData,
+        coach: teamData.coach,
+        manager: teamData.manager,
+        captain: teamData.captain,
+        redCards: teamData.redCards, // add red card data to template
+        teamId: teamId
+      });
+    }
+  });
+});
+
+// app.js
+
+// handle POST request to /add-captain route
+app.post('/add-captain', (req, res) => {
+  const { team_id, captain_id, match_no } = req.body;
+
+  // validate form fields
+  if (!team_id || !captain_id || !match_no) {
+    res.status(400).send('All fields are required.');
+    return;
+  }
+
+  // insert row into match_captain table
+  const insertQuery = 'INSERT INTO match_captain(match_no, team_id, player_captain) VALUES (?, ?, ?)';
+  connection.query(insertQuery, [match_no, team_id, captain_id], (insertError, insertResult) => {
+    if (insertError) {
+      console.error(insertError);
+      res.status(500).send('An error occurred while adding the captain.');
+      return;
+    }
+
+    // Redirect to the team page with a success message
+    res.redirect(`/team?id=${team_id}&message=Captain added successfully`);
+  });
+});
+
 app.get('/Team', (req, res) => {
   const teamId = req.query.id;
 

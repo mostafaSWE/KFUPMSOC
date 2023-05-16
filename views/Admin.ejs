@@ -38,7 +38,7 @@
         <!-- image with text and book now button -->
   <div class="content">
     <div class="content-text">
-      <a href="/viewRequests" class="btn btn-primary">View Requests</a>
+     
 
   </div>
         <!-- Searching tool  and the main body-->
@@ -63,7 +63,7 @@
                   <h2 class="card-name"><%= tournament.tr_name %></h2>
                   
                   <div class="card-buttons">
-                    <a href="/tournament?id=<%= tournament.tr_id %>&tr_name=<%= tournament.tr_name %>"><button class="card-button">Browse Tournament</button></a>
+                    <a href="/Tournament-Admin?id=<%= tournament.tr_id %>&tr_name=<%= tournament.tr_name %>"><button class="card-button">Browse Tournament</button></a>
                     <a href="/add-team-to-tournament"> <button class="card-button">Add Team</button></a>
                     <button class="card-button" style="background-color: red;">Delete Tournament</button>
                   </div>

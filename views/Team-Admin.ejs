@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/home.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <title>Document</title>
+    <style>
+        #first-p{
+            text-align: center;
+            margin-left: 10px;
+  
+        }
+        table {
+  border-collapse: collapse;
+  border: 1px solid black;
+  margin: 0 auto;
+}
+
+th, td {
+  border: 1px solid black;
+  padding: 8px;
+  text-align: center;
+}
+    </style>
+</head>
+<body style=" background-color: #E4DEDE;">
+
+
+  <!-- header -->
+
+    <div class="container">
+        <header class="header">
+          <div class="header-left">
+            <img src="Assets/football.png" alt="Website Icon">
+            <h1 class="header-title"><a href="/" style="color: green;">KFUPMSOC</a></h1>
+          </div>
+          
+          <div class="header-right">
+           <a href="/Sign-in"> <button class="header-button">Sign In</button></a>
+          </div>
+        </header>
+    
+
+        <!-- image with text and book now button -->
+   
+  <div class="content">
+    <% if (typeof error !== 'undefined' && error !== null) { %>
+    <% if (message) { %>
+      <div class="alert alert-success"><%= message %></div>
+    <% } %>
+    <% } %>
+    <div class="content-text">
+      <p id="first-p"><span class="content-text-break"><%= teamId %></span> Team</p>
+     
+    <!-- <a href="/Booking/booking.html">  <span class="book-now">
+        Book now
+      </span></a> -->
+    </div>
+    <!-- <div class="content-image">
+      <img src="Assets/feild.png" alt="Restaurant Image">
+    </div> -->
+
+  </div>
+  
+  
+
+  
+
+
+ 
+
+
+        <!-- Searching tool  and the main body-->
+        <div class="container">
+            <hr class="hr-content">
+            <% if (typeof errorMessage !== 'undefined' && errorMessage !== null) { %>
+              <div class="alert alert-danger" role="alert">
+                <%= errorMessage %>
+              </div>
+            
+            <% } else { %>
+            <h2>Red Cards</h2>
+            <table>
+              <tr>
+                <th>Player Name</th>
+                <th>Red Cards</th>
+              </tr>
+              <% if (redCards && redCards.length > 0) { %>
+                <% redCards.forEach(function(redCard) { %>
+                  <tr>
+                    <td><%= redCard.player_name %></td>
+                    <td><%= redCard.red_cards %></td>
+                  </tr>
+                <% }); %>
+              <% } else { %>
+                <tr>
+                  <td colspan="2">No red cards for this team.</td>
+                </tr>
+              <% } %>
+            </table>
+            <h1 class="header__title">Team Players</h1>
+            
+                <table>
+                    <thead>
+                      <tr>
+                        <th>Player ID</th>
+                        <th>Player Name</th>
+                        <th>Player Number</th>
+                        <th>Player Position</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <% for (let i = 0; i < team.players.length; i++) { %>
+                        <tr>
+                          <td><%= team.players[i].player_id %></td>
+                          <td><%= team.players[i].player_name %></td>
+                          <td><%= team.players[i].jersey_no %></td>
+                          <td><%= team.players[i].position_to_play %></td>
+                        </tr>
+                      <% } %>
+                    </tbody>
+                  </table>
+                  <h1 class="header__title">Team Coach</h1>
+                  <% if (coach) { %>
+                    <p>Id: <%= coach.coach_id %></p>
+                  <% } else { %>
+                    <p>No coach data available for this team.</p>
+                  <% } %>
+
+                  <h1 class="header__title">Team Captain</h1>
+
+                  <form method="POST" action="/add-captain">
+                    <h2>Select Match Captain</h2>
+                    
+                    <div class="form-group">
+                      <label for="captain-select">Select Player:</label>
+                      <select class="form-control" id="captain-select" name="captain_id">
+                        <% for (let i = 0; i < team.players.length; i++) { %>
+                          <option value="<%= team.players[i].player_id %>"><%= team.players[i].player_name %></option>
+                        <% } %>
+                      </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="team_id">Team ID:</label>
+                        <input type="number" class="form-control" id="team_id" name="team_id" value="<%= teamId %>" readonly>
+                      </div>
+                    <div class="form-group">
+                      <label for="match-no-input">Match Number:</label>
+                      <input type="number" class="form-control" id="match-no-input" name="match_no" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Captain</button>
+                  </form>
+
+
+                  <% if (captain) { %>
+                    <p><%= captain.player_captain %></p>
+                  <% } else { %>
+                    <p>No captain data available for this team.</p>
+                  <% } %>
+
+                  <h1 class="header__title">Team Manager</h1>
+                  <% if (manager) { %>
+                    <p><%= manager.manager_id %></p>
+                  <% } else { %>
+                    <p>No manager data available for this team.</p>
+                  <% } %>
+                  
+                  <% } %>    
+                  <hr class="hr-content">
+                  <h1 class="header__title">Join Team</h1>
+                  <form action="/join-team" method="post">
+                    <div class="form-group">
+                      <label for="player_id">Player ID:</label>
+                      <input type="number" class="form-control" id="player_id" name="player_id" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="team_id">Team ID:</label>
+                      <input type="number" class="form-control" id="team_id" name="team_id" value="<%= teamId %>" readonly>
+                    </div>
+                    <div class="form-group">
+                      <label for="jersey_no">Jersey Number:</label>
+                      <input type="number" class="form-control" id="jersey_no" name="jersey_no" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="player_name">Player Name:</label>
+                      <input type="text" class="form-control" id="player_name" name="player_name" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="position_to_play">Position to Play:</label>
+                      <input type="text" class="form-control" id="position_to_play" name="position_to_play" required>
+                    </div>
+                    <div class="form-group">
+                      <label for="dt_of_bir">Date of Birth:</label>
+                      <input type="date" class="form-control" id="dt_of_bir" name="dt_of_bir" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Join Team</button>
+                  </form>
+
+
+
+            
+            
+                  
+    </div>
+    
+
+    <!-- end of main body -->
+
+
+
+
+
+    <!-- Footer -->
+    <footer class="footer">
+      <div class="footer-container">
+        <div class="footer-item">
+          <a href="#">Home</a>
+        </div>
+        <div class="footer-item">
+          <a href="#">About</a>
+        </div>
+        <div class="footer-item">
+          <a href="#">Contact us</a>
+        </div>
+      </div>
+      <div class="footer-copy">
+        &copy; 2023 all right reserved for KFUPMSOC
+      </div>
+    </footer>
+
+    
+
+    
+</div>
+</body>
+</html>   
