@@ -48,6 +48,11 @@ th, td {
         <!-- image with text and book now button -->
    
   <div class="content">
+    <% if (typeof error !== 'undefined' && error !== null) { %>
+    <% if (message) { %>
+      <div class="alert alert-success"><%= message %></div>
+    <% } %>
+    <% } %>
     <div class="content-text">
       <p id="first-p"><span class="content-text-break"><%= teamId %></span> Team</p>
      

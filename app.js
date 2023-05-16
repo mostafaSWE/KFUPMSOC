@@ -207,7 +207,8 @@ app.post('/join-team', (req, res) => {
         res.status(500).send('Error joining team. Please try again later.');
         return;
       }
-      res.redirect(`/tournament?id=${team_id}`);
+      // Redirect to the team page with a success message
+      res.redirect(`/team?id=${team_id}&message=Join request sent successfully`);
     });
   });
 });
@@ -399,7 +400,8 @@ app.post('/approve-request', (req, res) => {
         return;
       }
 
-      res.status(200).send('Request approved successfully.');
+      // Redirect to the viewRequests page with a success message
+      res.redirect('/viewRequests?message=Request approved successfully');
     });
   });
 });
@@ -417,7 +419,8 @@ app.post('/reject-request', (req, res) => {
       return;
     }
 
-    res.status(200).send('Request rejected successfully.');
+    // Redirect to the viewRequests page with a success message
+    res.redirect('/viewRequests?message=Request rejected successfully');
   });
 });
 

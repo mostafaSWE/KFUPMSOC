@@ -30,9 +30,13 @@
   <div class="content">
     <p id="first-p">Welcome<span class="content-text-break">to KFUPMSOC</span></p>
     </div>
-    
+    <% if (typeof error !== 'undefined' && error !== null) { %>
+        <% if (message) { %>
+          <div class="alert alert-success"><%= message %></div>
+        <% } %>
+        <% } %>
 
-    <% if (typeof joinRequests !== 'undefined' && joinRequests !== null) { %>
+    
       <table>
         <thead>
           <tr>
@@ -46,6 +50,7 @@
           </tr>
         </thead>
         <tbody>
+        <% if (typeof joinRequests !== 'undefined' && joinRequests !== null) { %>
           <% for (let i = 0; i < joinRequests.length; i++) { %>
             <tr>
               <td><%= joinRequests[i].player_id %></td>
