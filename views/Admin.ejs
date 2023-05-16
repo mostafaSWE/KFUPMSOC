@@ -11,15 +11,65 @@
     <!-- <script src="/public/scripts/admin.js"></script> -->
     <title>Admin Page</title>
     <style>
-        #first-p{
-            text-align: center;
-            margin-left: 10px;
+      #first-p {
+        text-align: center;
+        margin-left: 10px;
+      }
+      .header__title {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+      }
+      .add {
+        text-align: center;
+      }
+      .alligned {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+      }
+      .alligned.large {
+        font-size: 32px;
+        text-transform: uppercase;
+      }
+      .alligned.highlight {
+        color: #4CAF50;
+      }
+      .content-heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .header__title1 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+      }
+      .header__title2 {
+        font-size: 24px;
+        font-weight: bold;
+        margin-bottom: 10px;
+        color: #333;
+        text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.1);
+        text-align: center;
+      }
+      .small-font {
+        font-size: 12px;
+        font-family: 'Crown', sans-serif;
+      }
+      .small-icon {
+        font-family: 'Crown', sans-serif;
+        font-size: 32px;
+        margin-left: 5px;
+      }
+</style>
   
-        }
-        .add{
-          text-align: center;
-        }
-    </style>
 </head>
 <body style=" background-color: #E4DEDE;">
 
@@ -42,12 +92,12 @@
 
   </div>
         <div class="container">
-          <h1 class="header__title">Check Join requests:</h1>
+          <h1 class="header__title1">Check Join requests:</h1>
           <a href="/viewRequests" class="btn btn-primary">View Requests</a>
           <hr class="hr-content">
-            <h1 class="header__title">KFUPMSOC highlights</h1>
+            <h1 class="header__title2">KFUPMSOC highlights</h1>
             <h2 class="alligned">Player with most goals</h2>
-            <p class="alligned">Name: <%= mostGoalsPlayer.player_name %></p>
+            <p class="alligned">Name: <%= mostGoalsPlayer.player_name %><span class="small-icon">&#x1F451;</span></p>
             <p class="alligned">Goals: <%= mostGoalsPlayer.goals %></p>
             <hr class="hr-content">
             <div class="add"><h1 class="header__title">Tournaments</h1>

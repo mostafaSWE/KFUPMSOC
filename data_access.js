@@ -80,6 +80,17 @@ function addManger(managerID,team_id){
     });
 }
 
+function deleteTournamentName(tournamentName){
+  const tournamentSql = `DELETE FROM tournament WHERE tr_name =${tournamentName}`;
+  connection.query(tournamentSql, (error, tournaments) => {
+      if (error) {
+        console.log(error);
+      }
+      else {
+        console.log(tournaments);
+      }
+  });
+}
 
 function addTournament(tournamentName,startDate,endDate){
   const tournamentSql = `INSERT INTO tournament (tr_name,start_date,end_date) VALUES ('${tournamentName}','${startDate}','${endDate}')`;
